@@ -1,14 +1,16 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { dummyStations } from "@/lib/dummyStations";
 import L from "leaflet";
+import { useMap } from "react-leaflet";
 
 import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
-import { useMap } from "react-leaflet";
+import { checkUserLocation } from "@/utils/locationService";
+
 
 // Fix default marker icon issue in Next.js
 delete L.Icon.Default.prototype._getIconUrl;
@@ -37,6 +39,32 @@ function RecenterMap({ position }) {
 export default function MapView() {
     const [selectedStation, setSelectedStation] = useState(null);
     const [userPosition, setUserPosition] = useState(null);
+    const [stations, setStations] = useState([]);
+
+    const [locationError, setLocationError] = useState(null);
+
+    const requestLocation = () => {
+        checkUserLocation(
+            (position) => {
+                console.log("User location:", position.coords);
+                setLocationError(null);
+            },
+            (error) => {
+                setLocationError(error);
+            }
+        );
+    };
+
+    useEffect(() => {
+        requestLocation();
+    }, []);
+
+    const retryLocation = () => {
+        requestLocation();
+    };
+
+
+    // Get users real or current location/position 
 
     useEffect(() => {
         if (!navigator.geolocation) return;
@@ -55,11 +83,31 @@ export default function MapView() {
         );
     }, []);
 
+
+    // Fetch Nearby Stations When Location Updates
+
+    // useEffect(() => {
+    //     if (!userPosition) return;
+
+    //     async function fetchStations() {
+    //         try {
+    //             const res = await fetch(
+    //                 `/api/stations/nearby?lat=${userPosition[0]}&lng=${userPosition[1]}&radius=10000`
+    //             );
+    //             const data = await res.json();
+    //             setStations(data);
+    //         } catch (err) {
+    //             console.error("Failed to fetch stations", err);
+    //         }
+    //     }
+
+    //     fetchStations();
+    // }, [userPosition]);
+
     return (
         <div className="h-screen w-full relative overflow-hidden">
-
             <MapContainer
-                center={userPosition || [5.607398, -0.249181]} // lat, lng
+                center={userPosition || [5.547671, -0.192268]} // lat, lng
                 zoom={13}
                 scrollWheelZoom={true}
                 className="h-full w-full"
@@ -81,6 +129,21 @@ export default function MapView() {
                         }}
                     />
                 ))}
+
+
+                {/* {stations.map((station) => (
+                    <Marker
+                        key={station._id}
+                        position={[
+                            station.location.coordinates[1],
+                            station.location.coordinates[0],
+                        ]}
+                        eventHandlers={{
+                            click: () => setSelectedStation(station),
+                        }}
+                    />
+                ))} */}
+
             </MapContainer>
 
             {/* Liquid Glass Card */}
@@ -117,6 +180,17 @@ export default function MapView() {
                 station={selectedStation}
                 onClose={() => setSelectedStation(null)}
             /> */}
+
+            {locationError && (
+                <div className="location-alert">
+                    <div className="glass-card">
+                        <h3>Location Required</h3>
+                        <p>{locationError.message}</p>
+                        <button onClick={retryLocation}>Retry</button>
+                    </div>
+                </div>
+            )}
         </div>
+
     );
 }
