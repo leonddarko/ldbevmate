@@ -10,6 +10,7 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import { checkUserLocation } from "@/utils/locationService";
+import LocationRequiredModal from "./LocationRequiredModal";
 
 
 // Fix default marker icon issue in Next.js
@@ -41,8 +42,8 @@ export default function MapView() {
     const [userPosition, setUserPosition] = useState(null);
     const [stations, setStations] = useState([]);
 
+    // Request Location
     const [locationError, setLocationError] = useState(null);
-
     const requestLocation = () => {
         checkUserLocation(
             (position) => {
@@ -58,13 +59,9 @@ export default function MapView() {
     useEffect(() => {
         requestLocation();
     }, []);
+    // Request Location
 
-    const retryLocation = () => {
-        requestLocation();
-    };
-
-
-    // Get users real or current location/position 
+    // Get users real current location/position 
 
     useEffect(() => {
         if (!navigator.geolocation) return;
@@ -149,7 +146,7 @@ export default function MapView() {
             {/* Liquid Glass Card */}
             {selectedStation && (
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-black transition-all duration-300">
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
 
@@ -181,15 +178,13 @@ export default function MapView() {
                 onClose={() => setSelectedStation(null)}
             /> */}
 
-            {locationError && (
-                <div className="location-alert">
-                    <div className="glass-card">
-                        <h3>Location Required</h3>
-                        <p>{locationError.message}</p>
-                        <button onClick={retryLocation}>Retry</button>
-                    </div>
-                </div>
-            )}
+
+            {/* Request Location Modal */}
+            <LocationRequiredModal
+                open={!!locationError}
+                message={locationError?.message}
+                onRetry={requestLocation}
+            />
         </div>
 
     );
