@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "daisyui": "^5.5.18",
     "framer-motion": "^12.34.2",
     "leaflet": "^1.9.4",

@@ -1,7 +1,7 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { dummyStations } from "@/lib/dummyStations";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
@@ -11,6 +11,8 @@ import UserLocationMarker from "./UserLocationMarker";
 
 import { checkUserLocation } from "@/utils/locationService";
 import LocationRequiredModal from "./LocationRequiredModal";
+import { LocateFixedIcon, } from "lucide-react";
+import UserDropdown from "../ui/UserDropdown";
 
 
 // Fix default marker icon issue in Next.js
@@ -81,6 +83,9 @@ export default function MapView() {
     }, []);
 
 
+    const [recenterTrigger, setRecenterTrigger] = useState(null);
+
+
     // Fetch Nearby Stations When Location Updates
 
     // useEffect(() => {
@@ -142,6 +147,40 @@ export default function MapView() {
                 ))} */}
 
             </MapContainer>
+
+            <UserDropdown />
+
+            <button
+                onClick={() => {
+                    if (!navigator.geolocation) return;
+
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const coords = [
+                            position.coords.latitude,
+                            position.coords.longitude,
+                        ];
+
+                        setUserPosition(coords);
+                    });
+                }}
+                className="
+                    fixed bottom-10 right-6
+                    w-12 h-12
+                    rounded-full
+                    bg-gradient-to-br from-cyan-400/10 to-blue-600/20
+                    backdrop-blur-3xl
+                    border border-white/20
+                    shadow-[0_0_20px_rgba(0,200,255,0.4)]
+                    flex items-center justify-center
+                    text-white
+                    hover:scale-110
+                    transition-all duration-200
+                    z-[9999]
+                    cursor-pointer
+                    "
+            >
+                <LocateFixedIcon className="text-white" size={20} />
+            </button>
 
             {/* Liquid Glass Card */}
             {selectedStation && (
