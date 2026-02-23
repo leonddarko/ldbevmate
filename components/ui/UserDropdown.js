@@ -2,14 +2,16 @@
 
 import { useSession, signOut } from "next-auth/react"
 import { User } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 export default function UserDropdown() {
+    const router = useRouter();
     const { data: session } = useSession();
 
     return (
         <>
-            {session && (
-                <div className="absolute top-6 right-6 z-[1000]">
+            <div className="absolute top-3 right-3 z-[1000]">
+                {session ? (
                     <div className="dropdown dropdown-end">
                         {/* Round Glass Button */}
                         <label
@@ -28,7 +30,7 @@ export default function UserDropdown() {
                             cursor-pointer
                             "
                         >
-                            <User size={20} className=" text-white" />
+                            <User size={20} className=" text-blue-950" />
                         </label>
 
                         {/* Dropdown Menu */}
@@ -36,13 +38,13 @@ export default function UserDropdown() {
                             tabIndex={0}
                             className="
                             dropdown-content mt-2 p-4
-                            w-64
-                            bg-white/20
-                            backdrop-blur-2xl
-                            border border-white/30
-                            rounded-2xl
-                            shadow-2xl
-                            text-black
+                            w-72
+                            bg-white/10
+                            backdrop-blur-xl
+                            border border-white/20
+                            rounded-3xl
+                            shadow-[0_0_20px_rgba(0,200,255,0.25)]
+                            text-blue-950
                             space-y-3
                             "
                         >
@@ -63,10 +65,7 @@ export default function UserDropdown() {
                                     onClick={() => signOut({ callbackUrl: "/signin" })}
                                     className="
                                     btn btn-sm w-full
-                                    bg-gradient-to-r
-                                    from-red-300
-                                    to-red-700
-                                    border-none
+                                    bg-blue-950
                                     rounded-full
                                     text-white
                                     hover:scale-105
@@ -78,8 +77,20 @@ export default function UserDropdown() {
                             </li>
                         </ul>
                     </div>
-                </div>
-            )}
+                ) : (
+                    <button
+                        onClick={() => router.push("/signin")}
+                        className="
+                        btn btn-md 
+                        rounded-full 
+                        backdrop-blur-2xl bg-white/10 border border-white/30
+                        shadow-[0_0_20px_rgba(0,200,255,0.4)]
+                        text-blue-950"
+                    >
+                        Sign in
+                    </button>
+                )}
+            </div>
         </>
     )
 }

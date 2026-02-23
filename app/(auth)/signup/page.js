@@ -52,12 +52,12 @@ export default function SignupPage() {
         px-6">
             <div
                 className="
-          w-full max-w-md
+          w-full max-w-sm
           bg-white/10
           backdrop-blur-2xl
-          border border-white/10
+          border border-white/30
           rounded-4xl
-          p-8
+          py-6 px-8
           shadow-2xl
           text-white
           hover:border-white/50
@@ -74,7 +74,7 @@ export default function SignupPage() {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-2">
                     <input
                         type="text"
                         name="name"
@@ -110,7 +110,7 @@ export default function SignupPage() {
                 py-2
                 rounded-full 
                 border-none
-                bg-blue-600/80 hover:bg-blue-700
+                bg-blue-950/80 hover:bg-blue-950/90
                 transition-all 
                 duration-200
                 text-white
@@ -128,7 +128,7 @@ export default function SignupPage() {
                 <p className="text-sm text-white mt-6 text-center">
                     Already have an account?{" "}
                     <span
-                        className="text-blue-700 cursor-pointer"
+                        className="text-blue-900 cursor-pointer"
                         onClick={() => router.push("/signin")}
                     >
                         Sign in

@@ -65,15 +65,15 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[url(/backgroundimages/ev-charging-station.jpg)] bg-cover bg-center bg-no-repeat bg-fixed">
+        <div className="min-h-screen flex items-center justify-center bg-[url(/backgroundimages/ev-charging-station.jpg)] bg-cover bg-center bg-no-repeat bg-fixed px-6">
             <div
                 className="
           w-full max-w-sm
           bg-white/10
           backdrop-blur-2xl
-          border border-white/20
+          border border-white/40
           rounded-3xl
-          p-8
+          py-6 px-8
           shadow-2xl
           text-white
           relative
@@ -94,7 +94,7 @@ export default function LoginPage() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-2">
                         <input
                             type="email"
                             name="email"
@@ -121,7 +121,7 @@ export default function LoginPage() {
                 py-2
                 rounded-full 
                 border-none
-                bg-blue-600/80 hover:bg-blue-700
+                bg-blue-950 hover:bg-blue-950/90
                 transition-all 
                 duration-200
                 text-white

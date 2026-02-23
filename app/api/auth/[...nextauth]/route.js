@@ -60,10 +60,10 @@ const handler = NextAuth({
     },
   },
 
-  // pages: {
-  //   signIn: "/signin",       // 🔥 custom login page
-  //   error: "/signin",        // 🔥 redirect errors here
-  // },
+  pages: {
+    signIn: "/signin",       // 🔥 custom login page
+    error: "/signin",        // 🔥 redirect errors here
+  },
 
   secret: process.env.NEXTAUTH_SECRET,
 });

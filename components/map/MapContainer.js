@@ -13,6 +13,7 @@ import { checkUserLocation } from "@/utils/locationService";
 import LocationRequiredModal from "./LocationRequiredModal";
 import { LocateFixedIcon, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
+import { useSession } from "next-auth/react";
 
 
 // Fix default marker icon issue in Next.js
@@ -43,6 +44,8 @@ export default function MapView() {
     const [selectedStation, setSelectedStation] = useState(null);
     const [userPosition, setUserPosition] = useState(null);
     const [stations, setStations] = useState([]);
+
+    const { data: session } = useSession();
 
     // Request Location
     const [locationError, setLocationError] = useState(null);
@@ -150,6 +153,7 @@ export default function MapView() {
 
             <UserDropdown />
 
+            {/* Button to center around user's current location */}
             <button
                 onClick={() => {
                     if (!navigator.geolocation) return;
@@ -164,27 +168,25 @@ export default function MapView() {
                     });
                 }}
                 className="
-                    fixed bottom-10 right-6
+                    fixed bottom-10 right-3
                     w-12 h-12
                     rounded-full
-                    bg-gradient-to-br from-cyan-400/10 to-blue-600/20
-                    backdrop-blur-3xl
-                    border border-white/20
+                    backdrop-blur-2xl bg-white/10
                     shadow-[0_0_20px_rgba(0,200,255,0.4)]
+                    border border-white/20
                     flex items-center justify-center
-                    text-white
                     hover:scale-110
                     transition-all duration-200
                     z-[9999]
                     cursor-pointer
                     "
             >
-                <LocateFixedIcon className="text-white" size={20} />
+                <LocateFixedIcon className="text-blue-950" size={20} />
             </button>
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-black transition-all duration-300">
+                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-blue-950 transition-all duration-300">
                     <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
@@ -204,7 +206,7 @@ export default function MapView() {
 
                     <button
                         onClick={() => setSelectedStation(null)}
-                        className="mt-4 w-full bg-black/80 text-white hover:bg-black transition rounded-full py-2"
+                        className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2"
                     >
                         Close
                     </button>
