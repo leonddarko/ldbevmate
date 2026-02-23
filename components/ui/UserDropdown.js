@@ -62,14 +62,15 @@ export default function UserDropdown() {
 
                             <li>
                                 <button
-                                    onClick={() => signOut({ callbackUrl: "/signin" })}
+                                    onClick={() => signOut({ callbackUrl: "/sign-in" })}
                                     className="
-                                    btn btn-sm w-full
+                                    btn btn-md w-full
                                     bg-blue-950
                                     rounded-full
                                     text-white
                                     hover:scale-105
                                     transition-all
+                                    shadow-none
                                     "
                                 >
                                     Sign Out
@@ -79,7 +80,7 @@ export default function UserDropdown() {
                     </div>
                 ) : (
                     <button
-                        onClick={() => router.push("/signin")}
+                        onClick={() => router.push("/sign-in")}
                         className="
                         btn btn-md 
                         rounded-full 

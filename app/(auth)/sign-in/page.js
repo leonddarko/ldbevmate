@@ -117,14 +117,14 @@ export default function LoginPage() {
                             type="submit"
                             disabled={loading}
                             className="
-                w-full
-                py-2
-                rounded-full 
-                border-none
-                bg-blue-950 hover:bg-blue-950/90
-                transition-all 
-                duration-200
-                text-white
+                            w-full
+                            py-2
+                            rounded-full 
+                            border-none
+                            bg-blue-950 hover:bg-blue-950/90
+                            transition-all 
+                            duration-200
+                            text-white
               "
                         >
                             {loading ?
@@ -139,8 +139,8 @@ export default function LoginPage() {
                     <p className="text-sm text-white/60 mt-6 text-center">
                         Don’t have an account?{" "}
                         <span
-                            className="text-blue-700 cursor-pointer"
-                            onClick={() => router.push("/signup")}
+                            className="text-blue-950 cursor-pointer"
+                            onClick={() => router.push("/sign-up")}
                         >
                             Sign Up
                         </span>

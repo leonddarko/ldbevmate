@@ -17,7 +17,7 @@ export default function Home() {
     if (status === "loading") return;
 
     if (!session) {
-      router.replace("/signin");
+      router.replace("/sign-in");
     }
   }, [session, status, router]);
 

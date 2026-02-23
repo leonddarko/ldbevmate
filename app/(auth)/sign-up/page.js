@@ -43,7 +43,7 @@ export default function SignupPage() {
             return;
         }
 
-        router.push("/signin");
+        router.push("/sign-in");
     };
 
     return (
@@ -129,7 +129,7 @@ export default function SignupPage() {
                     Already have an account?{" "}
                     <span
                         className="text-blue-900 cursor-pointer"
-                        onClick={() => router.push("/signin")}
+                        onClick={() => router.push("/sign-in")}
                     >
                         Sign in
                     </span>

@@ -168,7 +168,7 @@ export default function MapView() {
                     });
                 }}
                 className="
-                    fixed bottom-10 right-3
+                    fixed bottom-6 right-3
                     w-12 h-12
                     rounded-full
                     backdrop-blur-2xl bg-white/10
