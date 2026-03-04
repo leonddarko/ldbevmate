@@ -11,6 +11,8 @@ const MapView = dynamic(() => import("@/components/map/MapContainer"), {
 
 export default function Home() {
   const { data: session, status } = useSession();
+  console.log(session.user);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -20,14 +22,6 @@ export default function Home() {
       router.replace("/sign-in");
     }
   }, [session, status, router]);
-
-  if (status === "loading") {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg text-cyan-500"></span>
-      </div>
-    );
-  }
 
   if (!session) return null;
 

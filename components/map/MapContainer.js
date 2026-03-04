@@ -14,6 +14,7 @@ import LocationRequiredModal from "./LocationRequiredModal";
 import { LocateFixedIcon, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
+import BecomeOperatorModal from "../ui/BecomeOperatorModal";
 
 
 // Fix default marker icon issue in Next.js
@@ -150,6 +151,10 @@ export default function MapView() {
                 ))} */}
 
             </MapContainer>
+
+            {session?.user?.role === "user" && (
+                <BecomeOperatorModal />
+            )}
 
             <UserDropdown />
 

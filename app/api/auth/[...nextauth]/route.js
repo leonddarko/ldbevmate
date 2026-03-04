@@ -4,7 +4,9 @@ import bcrypt from "bcryptjs";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 
-const handler = NextAuth({
+// const handler = NextAuth({
+
+  export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,7 +23,7 @@ const handler = NextAuth({
         if (!user) {
           throw new Error("No user found");
         }
-        
+
 
         const isValid = await bcrypt.compare(
           credentials.password,
@@ -44,28 +46,35 @@ const handler = NextAuth({
 
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
   },
 
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role; // 🔥 attach role to token
+        token.id = user.id;       // 🔥 attach id
+        token.role = user.role;   // 🔥 attach role
       }
       return token;
     },
 
     async session({ session, token }) {
-      session.user.role = token.role; // 🔥 expose role to frontend
+      if (session.user) {
+        session.user.id = token.id;       // 🔥 expose id
+        session.user.role = token.role;   // 🔥 expose role
+      }
       return session;
     },
   },
 
   pages: {
-    signIn: "/signin",       // 🔥 custom login page
-    error: "/signin",        // 🔥 redirect errors here
+    signIn: "/sign-in",       // 🔥 custom login page
+    error: "/sign-in",        // 🔥 redirect errors here
   },
 
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
 
+
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

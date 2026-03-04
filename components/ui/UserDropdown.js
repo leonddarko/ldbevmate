@@ -3,14 +3,22 @@
 import { useSession, signOut } from "next-auth/react"
 import { User } from "lucide-react"
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useEffect } from "react";
 
 export default function UserDropdown() {
     const router = useRouter();
-    const { data: session } = useSession();
+     const { data: session, status, update } = useSession({ required: "true" });
+    
+        useEffect(() => {
+            update(); // force refetch from /api/auth/session
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+    
 
     return (
         <>
-            <div className="absolute top-3 right-3 z-[1000]">
+            <div className="absolute top-3 right-3 z-1000">
                 {session ? (
                     <div className="dropdown dropdown-end">
                         {/* Round Glass Button */}
@@ -50,21 +58,26 @@ export default function UserDropdown() {
                         >
 
                             <li>
-                                <div className="font-bold text-xl">{session.user.name}</div>
+                                <div className="font-bold text-xl">Hi, {session.user.name}!</div>
                                 <div className="text-sm opacity-70 break-all">{session.user.email}</div>
                             </li>
 
-                            {/* <li className="text-sm opacity-70 break-all">
-                                {session.user.email}
-                            </li> */}
+                            {session.user.role === "cpo" && (<>
+                                <li className="opacity-70 break-all">
+                                    <Link href="/cpo/dashboard">
+                                        CPO Dashboard
+                                    </Link>
+                                </li>
+                            </>)}
 
                             {/* <div className="divider my-1"></div> */}
+
 
                             <li>
                                 <button
                                     onClick={() => signOut({ callbackUrl: "/sign-in" })}
                                     className="
-                                    btn btn-md w-full
+                                    btn btn-sm w-full
                                     bg-blue-950
                                     rounded-full
                                     text-white
