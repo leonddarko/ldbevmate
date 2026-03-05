@@ -27,7 +27,7 @@ export async function GET() {
     const cpo = await CPO.findOne({ user: session.user.id })
       .populate("user", "name email");
 
-    //   console.log(cpo);
+      // console.log(cpo);
 
     if (!cpo) {
       return NextResponse.json(

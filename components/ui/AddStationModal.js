@@ -3,8 +3,7 @@
 import { Plus, X } from "lucide-react"
 import AddStationForm from "./AddStationForm"
 
-export default function AddStationModal({ Operator }) {
-    console.log(Operator.role);
+export default function AddStationModal() {
     
     return (
         <>
@@ -34,7 +33,6 @@ export default function AddStationModal({ Operator }) {
                     </div>
 
                     <AddStationForm
-                        operatorId={Operator?.id}
                         onSuccess={() => window.location.reload()}
                     />
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import SideNav from "@/components/ui/Sidenav";
+import SideNav from "@/components/layout/Sidenav";
 
 export default function CpoLayout({ children }) {
   return (

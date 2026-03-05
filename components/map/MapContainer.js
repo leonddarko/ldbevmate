@@ -92,23 +92,23 @@ export default function MapView() {
 
     // Fetch Nearby Stations When Location Updates
 
-    // useEffect(() => {
-    //     if (!userPosition) return;
+    useEffect(() => {
+        if (!userPosition) return;
 
-    //     async function fetchStations() {
-    //         try {
-    //             const res = await fetch(
-    //                 `/api/stations/nearby?lat=${userPosition[0]}&lng=${userPosition[1]}&radius=10000`
-    //             );
-    //             const data = await res.json();
-    //             setStations(data);
-    //         } catch (err) {
-    //             console.error("Failed to fetch stations", err);
-    //         }
-    //     }
+        async function fetchStations() {
+            try {
+                const res = await fetch(
+                    `/api/stations/nearby?lat=${userPosition[0]}&lng=${userPosition[1]}&radius=10000`
+                );
+                const data = await res.json();
+                setStations(data);
+            } catch (err) {
+                console.error("Failed to fetch stations", err);
+            }
+        }
 
-    //     fetchStations();
-    // }, [userPosition]);
+        fetchStations();
+    }, [userPosition]);
 
     return (
         <div className="h-screen w-full relative overflow-hidden">
@@ -126,7 +126,7 @@ export default function MapView() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {dummyStations.map((station) => (
+                {/* {dummyStations.map((station) => (
                     <Marker
                         key={station.id}
                         position={[station.coordinates[1], station.coordinates[0]]}
@@ -134,10 +134,10 @@ export default function MapView() {
                             click: () => setSelectedStation(station),
                         }}
                     />
-                ))}
+                ))} */}
 
 
-                {/* {stations.map((station) => (
+                {stations.map((station) => (
                     <Marker
                         key={station._id}
                         position={[
@@ -148,7 +148,7 @@ export default function MapView() {
                             click: () => setSelectedStation(station),
                         }}
                     />
-                ))} */}
+                ))}
 
             </MapContainer>
 

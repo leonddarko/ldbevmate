@@ -11,7 +11,6 @@ const MapView = dynamic(() => import("@/components/map/MapContainer"), {
 
 export default function Home() {
   const { data: session, status } = useSession();
-  console.log(session.user);
 
   const router = useRouter();
 

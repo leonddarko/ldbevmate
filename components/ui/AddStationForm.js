@@ -1,10 +1,30 @@
 "use client";
 
+import { Plug } from "lucide-react";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const CONNECTOR_OPTIONS = ["Type2", "CCS", "CHAdeMO", "GB/T", "Tesla"];
 
-export default function AddStationForm({ operatorId, onSuccess }) {
+export default function AddStationForm({ onSuccess }) {
+    const [cpo, setCpo] = useState(null);
+    const [loadingCPO, setLoadingCPO] = useState(true);
+
+    useEffect(() => {
+        async function fetchCPO() {
+            const res = await fetch("/api/cpo/me");
+            const data = await res.json();
+
+            if (res.ok) {
+                setCpo(data.cpo);
+            }
+
+            setLoadingCPO(false);
+        }
+
+        fetchCPO();
+    }, []);
+
 
     const [form, setForm] = useState({
         name: "",
@@ -43,7 +63,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
 
         try {
             const payload = {
-                cpo: operatorId,
+                cpo: cpo._id,
                 name: form.name,
                 description: form.description,
                 address: form.address,
@@ -90,7 +110,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                     type="text"
                     name="name"
                     required
-                    className="input input-sm bg-white/30 border border-none shadow w-full rounded-2xl focus:outline-0 focus:border-none"
+                    className="input input-sm bg-white/50 border border-none shadow w-full rounded-2xl focus:outline-0 focus:border-none"
                     value={form.name}
                     onChange={handleChange}
                 // placeholder="Name of Station"
@@ -102,7 +122,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                 <label className="label text-xs">Description</label>
                 <textarea
                     name="description"
-                    className="textarea textarea-sm textarea-bordered bg-white/30 border border-none shadow w-full rounded-2xl"
+                    className="textarea textarea-sm textarea-bordered bg-white/50 border border-none shadow w-full rounded-2xl"
                     value={form.description}
                     onChange={handleChange}
                 // placeholder="Description"
@@ -116,7 +136,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                     type="text"
                     name="address"
                     required
-                    className="input input-sm input-bordered bg-white/30 border border-none shadow w-full rounded-3xl"
+                    className="input input-sm input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
                     value={form.address}
                     onChange={handleChange}
                     placeholder="Address"
@@ -132,7 +152,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                         step="any"
                         name="latitude"
                         required
-                        className="input input-xs input-bordered bg-white/30 border border-none shadow w-full rounded-full"
+                        className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-full"
                         value={form.latitude}
                         onChange={handleChange}
                     />
@@ -145,7 +165,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                         step="any"
                         name="longitude"
                         required
-                        className="input input-xs input-bordered bg-white/30 border border-none shadow w-full rounded-full"
+                        className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-full"
                         value={form.longitude}
                         onChange={handleChange}
                     />
@@ -160,7 +180,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                         <label key={connector} className="cursor-pointer label gap-2">
                             <input
                                 type="checkbox"
-                                className="checkbox checkbox-xs bg-white/30"
+                                className="checkbox checkbox-xs bg-white/80"
                                 checked={form.connectors.includes(connector)}
                                 onChange={() => handleConnectorChange(connector)}
                             />
@@ -178,7 +198,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                         type="number"
                         name="powerKW"
                         required
-                        className="input input-xs input-bordered bg-white/30 border border-none shadow w-full rounded-3xl"
+                        className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
                         value={form.powerKW}
                         onChange={handleChange}
                     />
@@ -191,7 +211,7 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                         type="number"
                         step="0.01"
                         name="pricePerKWh"
-                        className="input input-xs input-bordered bg-white/30 border border-none shadow w-full rounded-3xl"
+                        className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
                         value={form.pricePerKWh}
                         onChange={handleChange}
                     />
@@ -220,7 +240,13 @@ export default function AddStationForm({ operatorId, onSuccess }) {
                 className="btn btn-neutral border-none bg-blue-950 w-full rounded-full text-white"
                 disabled={loading}
             >
-                {loading ? "Creating..." : "Create Station"}
+                {/* {loading ? "Creating..." : "Create Station"} */}
+                {loading ?
+                    <span className="flex justify-center items-center gap-2 font-semibold">
+                        <Plug size={20} className=" animate-ping" />
+                        Creating...
+                    </span>
+                    : "Create Station"}
             </button>
         </form>
     );
