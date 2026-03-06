@@ -28,7 +28,7 @@ export default async function StationsPage() {
         <h1 className="text-3xl text-blue-950 font-bold">Your Stations</h1>
         <AddStationModal />
       </div>
-      <CPOStationCard Stations={stations} />
+      <CPOStationCard Stations={stations.reverse()} />
     </div>
   );
 }

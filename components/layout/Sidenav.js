@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { DoorOpen, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, ShieldCheck, ShieldOff} from "lucide-react";
+import { DoorOpen, Dot, EllipsisVerticalIcon, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, ShieldCheck, ShieldOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
@@ -71,7 +71,64 @@ export default function SideNav() {
                             </div>
                         </div>
                     </Link>
+
+                    {/* Small Screen Navigation */}
+                    <div className="dropdown dropdown-end md:hidden">
+                        <button tabIndex={0} role="button"
+                            className="btn py-0 p-2 border-0 text-blue-950 bg-white hover:bg-zinc-100">
+                            <EllipsisVerticalIcon size={20} />
+                        </button>
+                        <ul tabIndex={0} className="dropdown-content menu rounded-3xl z-1000 w-80 p-2 shadow-md mt-5 bg-white border border-zinc-200">
+                            <li>
+                                {navlinks.slice(0, 2).map((item) => (
+                                    <a key={item.id} href={item.path} className="flex justify-between items-center gap-2 text-black/40 transition-all">
+                                        <div className="flex items-center gap-2 text-zinc-400">
+                                            <item.icon size={20} className={` ${item.path === pathname && "text-red-700"}`} />
+                                            <span className={` ${item.path === pathname && "text-black"} font-semibold font-notosans text-sm transition-all`}>
+                                                {item.linkname}
+                                            </span>
+                                        </div>
+                                        <Dot size={15} className={`${item.path === pathname ? "text-black" : "text-zinc-300"}`} />
+                                    </a>
+                                ))}
+                            </li>
+                            <li>
+                                <ul>
+                                    <li>
+                                        {navlinks.slice(2).map((item) => (
+                                            <a key={item.id} href={item.path} className="flex justify-between items-center gap-2 text-black/40 transition-all">
+                                                <div className="flex items-center gap-2 text-zinc-400">
+                                                    <item.icon size={15} className={` ${item.path === pathname && "text-red-700"}`} />
+                                                    <span className={` ${item.path === pathname && "text-black"} font-semibold font-notosans text-sm transition-all`}>
+                                                        {item.linkname}
+                                                    </span>
+                                                </div>
+                                                <Dot size={15} className={`${item.path === pathname ? "text-black" : "text-zinc-300"}`} />
+                                            </a>
+                                        ))}
+                                    </li>
+                                </ul>
+                            </li>
+                            <div className="flex items-center gap-1 text-xs font-normal ps-3 mt-2 mb-1">
+                                <span className=" font-medium"></span>
+                            </div>
+                            <li>
+                                <button
+                                    onClick={() => signOut()}
+                                    className="justify-between items-center gap-2 text-black/40 hover:bg-red-100 transition-all">
+                                    <div className="flex items-center gap-2 text-black">
+                                        <Dot size={15} className="text-red-700" />
+                                        <span className={` font-semibold font-notosans text-sm`}>Signout</span>
+                                    </div>
+                                    <DoorOpen size={15} className="text-red-700" />
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    {/* Small Screen Navigation */}
                 </div>
+
+
 
                 {/* User Id */}
                 {session && (

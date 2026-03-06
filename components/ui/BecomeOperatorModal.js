@@ -64,14 +64,12 @@ export default function BecomeOperatorModal() {
                     Become a CPO
                 </div>
                 <EvCharger size={20} />
-
             </button>
 
             {/* Modal */}
             <dialog id="become_operator_modal" className="modal">
                 <div className="modal-box backdrop-blur-2xl 
                 bg-blue-100/30 border border-blue-100/40 rounded-3xl p-6 max-w-md">
-
                     {/* Close */}
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">

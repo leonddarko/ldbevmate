@@ -20,7 +20,7 @@ export default function AddStationModal() {
 
 
             <dialog id="addstation_modal" className="modal">
-                <div className="modal-box backdrop-blur-2xl bg-blue-100/40 border border-blue-100/50 rounded-3xl shadow-2xl p-6 max-w-lg">
+                <div className="modal-box backdrop-blur-2xl bg-blue-50/30 border border-blue-100/40 rounded-3xl shadow-2xl p-6 max-w-lg">
                     <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
                         <button className="btn-sm btn-circle btn-ghost absolute right-2 top-2">

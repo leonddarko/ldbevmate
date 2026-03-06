@@ -36,5 +36,5 @@ export async function GET(req) {
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
-    
+
 }

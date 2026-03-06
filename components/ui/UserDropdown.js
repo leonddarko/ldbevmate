@@ -1,110 +1,154 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
-import { User } from "lucide-react"
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useEffect } from "react";
+import { User, LayoutDashboard, LogOut, DoorOpen } from "lucide-react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { useEffect } from "react"
 
 export default function UserDropdown() {
-    const router = useRouter();
-     const { data: session, status, update } = useSession({ required: "true" });
-    
-        useEffect(() => {
-            update(); // force refetch from /api/auth/session
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
-    
+
+    const router = useRouter()
+
+    const { data: session, update } = useSession({ required: true })
+
+    useEffect(() => {
+        update()
+    }, [update])
 
     return (
-        <>
-            <div className="absolute top-3 right-3 z-1000">
-                {session ? (
-                    <div className="dropdown dropdown-end">
-                        {/* Round Glass Button */}
-                        <label
-                            tabIndex={0}
-                            className="
-                            w-12 h-12
-                            rounded-full
-                            bg-gradient-to-br from-cyan-400/10 to-blue-600/20
-                            backdrop-blur-2xl
-                            border border-white/20
-                            shadow-[0_0_20px_rgba(0,200,255,0.25)]
-                            flex items-center justify-center
-                            text-white
-                            hover:scale-110
-                            transition-all duration-200
-                            cursor-pointer
-                            "
-                        >
-                            <User size={20} className=" text-blue-950" />
-                        </label>
+        <div className="absolute top-3 right-3 z-[1000]">
 
-                        {/* Dropdown Menu */}
-                        <ul
-                            tabIndex={0}
-                            className="
-                            dropdown-content mt-2 p-4
-                            w-72
-                            bg-white/10
-                            backdrop-blur-xl
-                            border border-white/20
-                            rounded-3xl
-                            shadow-[0_0_20px_rgba(0,200,255,0.25)]
-                            text-blue-950
-                            space-y-3
-                            "
-                        >
+            {session ? (
 
-                            <li>
-                                <div className="font-bold text-xl">Hi, {session.user.name}!</div>
-                                <div className="text-sm opacity-70 break-all">{session.user.email}</div>
-                            </li>
+                <div className="dropdown dropdown-end">
 
-                            {session.user.role === "cpo" && (<>
-                                <li className="opacity-70 break-all">
-                                    <Link href="/cpo/dashboard">
-                                        CPO Dashboard
-                                    </Link>
-                                </li>
-                            </>)}
+                    {/* Avatar Button */}
+                    <label
+                        tabIndex={0}
+                        className="
+                        w-11 h-11
+                        rounded-full
+                        flex items-center justify-center
+                        bg-gradient-to-br from-cyan-200/10 to-blue-300/20
+                        backdrop-blur-xl
+                        border border-white/20
+                        shadow-[0_0_25px_rgba(0,200,255,0.25)]
+                        hover:scale-105
+                        transition-all
+                        cursor-pointer
+                        
+                        "
+                    >
+                        {/* <User size={20} className="text-blue-950" /> */}
+                        <div className="text-blue-950
+                        font-bold text-xl">
+                            {session.user.name?.charAt(0)}
+                        </div>
+                    </label>
 
-                            {/* <div className="divider my-1"></div> */}
+                    {/* Dropdown */}
+                    <div
+                        tabIndex={0}
+                        className="
+                        dropdown-content mt-3
+                        w-80
+                        bg-white/10
+                        backdrop-blur-2xl
+                        border border-white/20
+                        rounded-3xl
+                        shadow-[0_0_25px_rgba(0,200,255,0.2)]
+                        overflow-hidden
+                        "
+                    >
 
+                        {/* User Header */}
+                        <div className="px-5 py-2 border-b border-white/10">
 
-                            <li>
-                                <button
-                                    onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                            <div className="font-bold text-xl text-blue-950">
+                                {session.user.name}
+                            </div>
+
+                            <div className="text-xs text-blue-950/60 break-all">
+                                {session.user.email}
+                            </div>
+
+                        </div>
+
+                        {/* Menu */}
+                        <div className="p-2 space-y-1">
+
+                            {session.user.role === "cpo" && (
+
+                                <Link
+                                    href="/cpo/dashboard"
                                     className="
-                                    btn btn-sm w-full
-                                    bg-blue-950
-                                    rounded-full
-                                    text-white
-                                    hover:scale-105
-                                    transition-all
-                                    shadow-none
+                                    flex items-center gap-3
+                                    px-4 py-2
+                                    rounded-xl
+                                    text-blue-950
+                                    hover:bg-blue-500/10
+                                    transition
                                     "
                                 >
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-medium">
+                                        CPO Dashboard
+                                    </span>
+                                </Link>
+
+                            )}
+
+                        </div>
+
+                        {/* Footer */}
+                        <div className="border-t border-white/10 p-2">
+
+                            <button
+                                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                                className="
+                                w-full
+                                flex items-center gap-3
+                                px-4 py-2
+                                rounded-xl
+                                text-red-500
+                                hover:bg-red-500/10
+                                transition
+                                cursor-pointer
+                                "
+                            >
+                                <DoorOpen size={18} />
+                                <span className="font-medium">
                                     Sign Out
-                                </button>
-                            </li>
-                        </ul>
+                                </span>
+                            </button>
+
+                        </div>
+
                     </div>
-                ) : (
-                    <button
-                        onClick={() => router.push("/sign-in")}
-                        className="
-                        btn btn-md 
-                        rounded-full 
-                        backdrop-blur-2xl bg-white/10 border border-white/30
-                        shadow-[0_0_20px_rgba(0,200,255,0.4)]
-                        text-blue-950"
-                    >
-                        Sign in
-                    </button>
-                )}
-            </div>
-        </>
+                </div>
+
+            ) : (
+
+                <button
+                    onClick={() => router.push("/sign-in")}
+                    className="
+                    px-5 py-2
+                    rounded-full
+                    backdrop-blur-xl
+                    bg-white/10
+                    border border-white/30
+                    shadow-[0_0_20px_rgba(0,200,255,0.4)]
+                    text-blue-950
+                    hover:scale-105
+                    transition
+                    "
+                >
+                    Sign In
+                </button>
+
+            )}
+
+        </div>
     )
 }

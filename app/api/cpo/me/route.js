@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectDB from "@/lib/db";
 import CPO from "@/models/CPO";
+import Station from "@/models/Station";
 
 export async function GET() {
   try {
@@ -36,7 +37,10 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ cpo }, { status: 200 });
+    const stations = await Station.find({ cpo: cpo._id }).lean();
+    
+
+    return NextResponse.json({ cpo, stations }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

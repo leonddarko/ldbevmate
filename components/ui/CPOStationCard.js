@@ -21,7 +21,7 @@ export default function CPOStationCard({ Stations }) {
                         rounded-2xl
                         p-5
                         shadow-sm
-                        flex justify-between items-center
+                        flex justify-between items-center gap-5
     "
                     >
                         {/* Station Info */}
@@ -58,9 +58,9 @@ export default function CPOStationCard({ Stations }) {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-2">
+                        <div className="flex flex-col md:flex-row gap-2">
 
-                            <a
+                            {/* <a
                                 href={`/?station=${station._id}`}
                                 className="btn btn-xs backdrop-blur-xl bg-blue-500/10 border border-blue-100/20 shadow-sm text-blue-950 rounded-full
                                 flex justify-between
@@ -68,9 +68,9 @@ export default function CPOStationCard({ Stations }) {
                             >
                                 <MapPin size={15} />
                                 <span>
-                                    View on Map
+                                    View Map
                                 </span>
-                            </a>
+                            </a> */}
 
                             <a
                                 href={`/cpo/stations/${station._id}/edit`}

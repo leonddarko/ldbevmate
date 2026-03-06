@@ -29,14 +29,17 @@ L.Icon.Default.mergeOptions({
 });
 
 
-function RecenterMap({ position }) {
+export function MapController({ centerTrigger, position }) {
     const map = useMap();
 
     useEffect(() => {
-        if (position) {
-            map.flyTo(position, 14, { duration: 1.5 });
-        }
-    }, [position]);
+        if (!position) return;
+
+        map.flyTo(position, map.getZoom(), {
+            duration: 1.2,
+        });
+
+    }, [centerTrigger]);
 
     return null;
 }
@@ -46,9 +49,10 @@ export default function MapView() {
     const [userPosition, setUserPosition] = useState(null);
     const [stations, setStations] = useState([]);
 
+    const [centerTrigger, setCenterTrigger] = useState(0);
     const { data: session } = useSession();
 
-    // Request Location
+    // Request User Location Access
     const [locationError, setLocationError] = useState(null);
     const requestLocation = () => {
         checkUserLocation(
@@ -65,33 +69,126 @@ export default function MapView() {
     useEffect(() => {
         requestLocation();
     }, []);
-    // Request Location
+    // Request User Location Access
 
-    // Get users real current location/position 
+
+    // Get user's real current location/position 
+    // Get user's real current location/position 
+
+    const lastPositionRef = useRef(null);
+
+    function getDistanceMeters(lat1, lon1, lat2, lon2) {
+        const R = 6371000;
+        const toRad = (deg) => (deg * Math.PI) / 180;
+
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) *
+            Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
 
     useEffect(() => {
         if (!navigator.geolocation) return;
 
-        navigator.geolocation.getCurrentPosition(
+        const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                const coords = [
-                    position.coords.latitude,
-                    position.coords.longitude,
-                ];
-                setUserPosition(coords);
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                const newCoords = [lat, lng];
+
+                if (!lastPositionRef.current) {
+                    lastPositionRef.current = newCoords;
+                    setUserPosition(newCoords);
+                    return;
+                }
+
+                const [prevLat, prevLng] = lastPositionRef.current;
+
+                const distance = getDistanceMeters(
+                    prevLat,
+                    prevLng,
+                    lat,
+                    lng
+                );
+
+                // Only update if user moved more than 30 meters
+                if (distance > 30) {
+                    lastPositionRef.current = newCoords;
+                    setUserPosition(newCoords);
+                }
             },
             (error) => {
                 console.log("Location access denied or unavailable.");
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 15000,
+                timeout: 7000,
             }
         );
+
+        return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
+    // useEffect(() => {
+    //     if (!navigator.geolocation) return;
 
-    const [recenterTrigger, setRecenterTrigger] = useState(null);
+    //     const watchId = navigator.geolocation.watchPosition(
+    //         (position) => {
+    //             const coords = [
+    //                 position.coords.latitude,
+    //                 position.coords.longitude,
+    //             ];
+
+    //             setUserPosition(coords);
+    //         },
+    //         (error) => {
+    //             console.log("Location access denied or unavailable.");
+    //         },
+    //         {
+    //             enableHighAccuracy: true,   // use GPS if available
+    //             maximumAge: 10000,          // accept cached location up to 10s old
+    //             timeout: 5000               // wait max 5s for position
+    //         }
+    //     );
+
+    //     return () => {
+    //         navigator.geolocation.clearWatch(watchId);
+    //     };
+
+    // }, []);
+
+    // useEffect(() => {
+    //     if (!navigator.geolocation) return;
+
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             const coords = [
+    //                 position.coords.latitude,
+    //                 position.coords.longitude,
+    //             ];
+    //             setUserPosition(coords);
+    //         },
+    //         (error) => {
+    //             console.log("Location access denied or unavailable.");
+    //         }
+    //     );
+    // }, []);
+
+    // Get user's real current location/position
+    // Get user's real current location/position
 
 
     // Fetch Nearby Stations When Location Updates
-
     useEffect(() => {
         if (!userPosition) return;
 
@@ -109,6 +206,8 @@ export default function MapView() {
 
         fetchStations();
     }, [userPosition]);
+    // Fetch Nearby Stations When Location Updates
+
 
     return (
         <div className="h-screen w-full relative overflow-hidden">
@@ -120,7 +219,12 @@ export default function MapView() {
             >
 
                 <UserLocationMarker position={userPosition} />
-                <RecenterMap position={userPosition} />
+
+                <MapController
+                    position={userPosition}
+                    centerTrigger={centerTrigger}
+                />
+
                 <TileLayer
                     attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -149,7 +253,6 @@ export default function MapView() {
                         }}
                     />
                 ))}
-
             </MapContainer>
 
             {session?.user?.role === "user" && (
@@ -161,30 +264,22 @@ export default function MapView() {
             {/* Button to center around user's current location */}
             <button
                 onClick={() => {
-                    if (!navigator.geolocation) return;
-
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        const coords = [
-                            position.coords.latitude,
-                            position.coords.longitude,
-                        ];
-
-                        setUserPosition(coords);
-                    });
+                    if (!userPosition) return;
+                    setCenterTrigger((prev) => prev + 1);
                 }}
                 className="
-                    fixed bottom-6 right-3
-                    w-12 h-12
-                    rounded-full
-                    backdrop-blur-2xl bg-white/10
-                    shadow-[0_0_20px_rgba(0,200,255,0.4)]
-                    border border-white/20
-                    flex items-center justify-center
-                    hover:scale-110
-                    transition-all duration-200
-                    z-[9999]
-                    cursor-pointer
-                    "
+                fixed bottom-6 right-3
+                w-12 h-12
+                rounded-full
+                backdrop-blur-2xl bg-white/10
+                shadow-[0_0_20px_rgba(0,200,255,0.4)]
+                border border-white/20
+                flex items-center justify-center
+                hover:scale-110
+                transition-all duration-200
+                z-9999
+                cursor-pointer
+    "
             >
                 <LocateFixedIcon className="text-blue-950" size={20} />
             </button>
