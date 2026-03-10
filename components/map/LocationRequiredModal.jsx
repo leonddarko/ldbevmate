@@ -9,15 +9,15 @@ export default function LocationRequiredModal({
         <div className="modal modal-open z-[9999]">
             <div
                 className="
-          modal-box 
-          relative
-          bg-white/20
-          backdrop-blur-2xl
-          border border-white/30
-          shadow-2xl
-          rounded-3xl
-          text-black
-          overflow-hidden
+                modal-box 
+                relative
+                bg-white/20
+                backdrop-blur-2xl
+                border border-white/30
+                shadow-2xl
+                rounded-3xl
+                text-black
+                overflow-hidden
         "
             >
                 {/* Gradient Glow Layer */}
@@ -36,14 +36,14 @@ export default function LocationRequiredModal({
                         <button
                             onClick={onRetry}
                             className="
-                w-full
-                py-2
-                rounded-full 
-                border-none
-                bg-blue-600/80 hover:bg-blue-700
-                transition-all 
-                duration-200
-                text-white
+                            w-full
+                            py-2
+                            rounded-full 
+                            border-none
+                            bg-blue-600/80 hover:bg-blue-700
+                            transition-all 
+                            duration-200
+                            text-white
               "
                         >
                             Retry Location

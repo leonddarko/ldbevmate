@@ -50,6 +50,12 @@ export default function MapView() {
     const [stations, setStations] = useState([]);
 
     const [centerTrigger, setCenterTrigger] = useState(0);
+
+    // Loader UI
+    const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+    const [isLoadingStations, setIsLoadingStations] = useState(true);
+    const [hasCentered, setHasCentered] = useState(false);
+
     const { data: session } = useSession();
 
     // Request User Location Access
@@ -105,9 +111,17 @@ export default function MapView() {
 
                 const newCoords = [lat, lng];
 
+                // if (!lastPositionRef.current) {
+                //     lastPositionRef.current = newCoords;
+                //     setUserPosition(newCoords);
+                //     return;
+                // }
+
+                
                 if (!lastPositionRef.current) {
                     lastPositionRef.current = newCoords;
                     setUserPosition(newCoords);
+                    setIsLoadingLocation(false);
                     return;
                 }
 
@@ -125,6 +139,7 @@ export default function MapView() {
                     lastPositionRef.current = newCoords;
                     setUserPosition(newCoords);
                 }
+
             },
             (error) => {
                 console.log("Location access denied or unavailable.");
@@ -139,55 +154,6 @@ export default function MapView() {
         return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
-    // useEffect(() => {
-    //     if (!navigator.geolocation) return;
-
-    //     const watchId = navigator.geolocation.watchPosition(
-    //         (position) => {
-    //             const coords = [
-    //                 position.coords.latitude,
-    //                 position.coords.longitude,
-    //             ];
-
-    //             setUserPosition(coords);
-    //         },
-    //         (error) => {
-    //             console.log("Location access denied or unavailable.");
-    //         },
-    //         {
-    //             enableHighAccuracy: true,   // use GPS if available
-    //             maximumAge: 10000,          // accept cached location up to 10s old
-    //             timeout: 5000               // wait max 5s for position
-    //         }
-    //     );
-
-    //     return () => {
-    //         navigator.geolocation.clearWatch(watchId);
-    //     };
-
-    // }, []);
-
-    // useEffect(() => {
-    //     if (!navigator.geolocation) return;
-
-    //     navigator.geolocation.getCurrentPosition(
-    //         (position) => {
-    //             const coords = [
-    //                 position.coords.latitude,
-    //                 position.coords.longitude,
-    //             ];
-    //             setUserPosition(coords);
-    //         },
-    //         (error) => {
-    //             console.log("Location access denied or unavailable.");
-    //         }
-    //     );
-    // }, []);
-
-    // Get user's real current location/position
-    // Get user's real current location/position
-
-
     // Fetch Nearby Stations When Location Updates
     useEffect(() => {
         if (!userPosition) return;
@@ -195,12 +161,14 @@ export default function MapView() {
         async function fetchStations() {
             try {
                 const res = await fetch(
-                    `/api/stations/nearby?lat=${userPosition[0]}&lng=${userPosition[1]}&radius=10000`
+                    `/api/stations/nearby?lat=${userPosition[0]}&lng=${userPosition[1]}&radius=30000`
                 );
                 const data = await res.json();
                 setStations(data);
             } catch (err) {
                 console.error("Failed to fetch stations", err);
+            } finally {
+                setIsLoadingStations(false);
             }
         }
 
@@ -209,8 +177,35 @@ export default function MapView() {
     // Fetch Nearby Stations When Location Updates
 
 
+
+    // Auto - Center When Everything Is Ready
+    useEffect(() => {
+        if (
+            userPosition &&
+            !isLoadingStations &&
+            !hasCentered
+        ) {
+            setCenterTrigger((prev) => prev + 1);
+            setHasCentered(true);
+        }
+    }, [userPosition, isLoadingStations]);
+    // Auto - Center When Everything Is Ready
+
+
     return (
         <div className="h-screen w-full relative overflow-hidden">
+            {(isLoadingLocation || isLoadingStations) && (
+                <div className="absolute inset-0 z-9999 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md">
+
+                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+
+                    <p className="text-blue-950 font-medium text-center px-6">
+                        Loading your location and nearby stations...
+                    </p>
+
+                </div>
+            )}
+
             <MapContainer
                 center={userPosition || [5.547671, -0.192268]} // lat, lng
                 zoom={13}
@@ -286,7 +281,7 @@ export default function MapView() {
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-blue-950 transition-all duration-300">
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-blue-950 transition-all duration-300">
                     <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
@@ -326,6 +321,9 @@ export default function MapView() {
                 message={locationError?.message}
                 onRetry={requestLocation}
             />
+
+
+
         </div>
 
     );
