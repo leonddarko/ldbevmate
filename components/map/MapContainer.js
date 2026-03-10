@@ -211,11 +211,11 @@ export default function MapView() {
     return (
         <div className="h-screen w-full relative overflow-hidden">
             {/* Loader UI  */}
-            {(isLoadingLocation || isLoadingStations) && (
-                <div className="absolute inset-0 z-9999 flex flex-col items-center justify-center bg-white/70 backdrop-blur-lg">
+            {(isLoadingLocation || isLoadingStations) &&(
+                <div className="absolute inset-0 z-10000 flex flex-col items-center justify-center bg-white/70 backdrop-blur-xs">
 {/* 
                     <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div> */}
-                    <span className="loading loading-spinner loading-lg text-blue-500"></span>
+                    <span className="loading loading-spinner loading-lg text-blue-900"></span>
 
                     <p className="text-blue-950 font-medium text-center px-6">
                         Loading your location and nearby stations...
