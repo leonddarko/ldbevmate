@@ -28,6 +28,20 @@ L.Icon.Default.mergeOptions({
         "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
+const redEvIcon = new L.Icon({
+    iconUrl: "/icons/ev-charger-red.svg", // place in /public/icons
+    iconSize: [40, 40],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
+});
+
+const greenEvIcon = new L.Icon({
+    iconUrl: "/icons/ev-charger-green.svg", // place in /public/icons
+    iconSize: [40, 40],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
+});
+
 
 export function MapController({ centerTrigger, position }) {
     const map = useMap();
@@ -60,6 +74,7 @@ export default function MapView() {
 
     // Request User Location Access
     const [locationError, setLocationError] = useState(null);
+
     const requestLocation = () => {
         checkUserLocation(
             (position) => {
@@ -78,9 +93,7 @@ export default function MapView() {
     // Request User Location Access
 
 
-    // Get user's real current location/position 
-    // Get user's real current location/position 
-
+    // Get user's location/position 
     const lastPositionRef = useRef(null);
 
     function getDistanceMeters(lat1, lon1, lat2, lon2) {
@@ -154,6 +167,9 @@ export default function MapView() {
         return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
+    // Get user's location/position 
+
+
     // Fetch Nearby Stations When Location Updates
     useEffect(() => {
         if (!userPosition) return;
@@ -194,10 +210,12 @@ export default function MapView() {
 
     return (
         <div className="h-screen w-full relative overflow-hidden">
+            {/* Loader UI  */}
             {(isLoadingLocation || isLoadingStations) && (
-                <div className="absolute inset-0 z-9999 flex flex-col items-center justify-center bg-white/70 backdrop-blur-md">
-
-                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <div className="absolute inset-0 z-9999 flex flex-col items-center justify-center bg-white/70 backdrop-blur-lg">
+{/* 
+                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div> */}
+                    <span className="loading loading-spinner loading-lg text-blue-500"></span>
 
                     <p className="text-blue-950 font-medium text-center px-6">
                         Loading your location and nearby stations...
@@ -225,6 +243,21 @@ export default function MapView() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
+                {stations.map((station) => (
+                    <Marker
+                        key={station._id}
+                        position={[
+                            station.location.coordinates[1],
+                            station.location.coordinates[0],
+                        ]}
+                        // icon={evIcon}
+                        icon={station.availabilityStatus === "available" ? greenEvIcon : redEvIcon}
+                        eventHandlers={{
+                            click: () => setSelectedStation(station),
+                        }}
+                    />
+                ))}
+
                 {/* {dummyStations.map((station) => (
                     <Marker
                         key={station.id}
@@ -234,20 +267,6 @@ export default function MapView() {
                         }}
                     />
                 ))} */}
-
-
-                {stations.map((station) => (
-                    <Marker
-                        key={station._id}
-                        position={[
-                            station.location.coordinates[1],
-                            station.location.coordinates[0],
-                        ]}
-                        eventHandlers={{
-                            click: () => setSelectedStation(station),
-                        }}
-                    />
-                ))}
             </MapContainer>
 
             {session?.user?.role === "user" && (
