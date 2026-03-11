@@ -1,3 +1,5 @@
+import { RotateCw } from "lucide-react";
+
 export default function LocationRequiredModal({
     open,
     message,
@@ -6,7 +8,7 @@ export default function LocationRequiredModal({
     if (!open) return null;
 
     return (
-        <div className="modal modal-open z-[9999]">
+        <div className="modal modal-open z-10001">
             <div
                 className="
                 modal-box 
@@ -40,12 +42,15 @@ export default function LocationRequiredModal({
                             py-2
                             rounded-full 
                             border-none
-                            bg-blue-600/80 hover:bg-blue-700
+                            bg-blue-800/80 hover:bg-blue-900
                             transition-all 
                             duration-200
                             text-white
+                            cursor-pointer
+                            flex justify-center items-center gap-2
               "
                         >
+                            <RotateCw size={20} />
                             Retry Location
                         </button>
                     </div>

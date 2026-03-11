@@ -9,7 +9,6 @@ import { useMap } from "react-leaflet";
 import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
-import { checkUserLocation } from "@/utils/locationService";
 import LocationRequiredModal from "./LocationRequiredModal";
 import { LocateFixedIcon, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
@@ -69,29 +68,9 @@ export default function MapView() {
     const [isLoadingLocation, setIsLoadingLocation] = useState(true);
     const [isLoadingStations, setIsLoadingStations] = useState(true);
     const [hasCentered, setHasCentered] = useState(false);
-
-    const { data: session } = useSession();
-
-    // Request User Location Access
     const [locationError, setLocationError] = useState(null);
 
-    const requestLocation = () => {
-        checkUserLocation(
-            (position) => {
-                console.log("User location:", position.coords);
-                setLocationError(null);
-            },
-            (error) => {
-                setLocationError(error);
-            }
-        );
-    };
-
-    useEffect(() => {
-        requestLocation();
-    }, []);
-    // Request User Location Access
-
+    const { data: session } = useSession();
 
     // Get user's location/position 
     const lastPositionRef = useRef(null);
@@ -115,7 +94,13 @@ export default function MapView() {
     }
 
     useEffect(() => {
-        if (!navigator.geolocation) return;
+        if (!("geolocation" in navigator)) {
+            setLocationError({
+                type: "UNSUPPORTED",
+                message: "Geolocation is not supported by your browser.",
+            });
+            return;
+        }
 
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
@@ -124,17 +109,12 @@ export default function MapView() {
 
                 const newCoords = [lat, lng];
 
-                // if (!lastPositionRef.current) {
-                //     lastPositionRef.current = newCoords;
-                //     setUserPosition(newCoords);
-                //     return;
-                // }
-
-                
+                // First location fix
                 if (!lastPositionRef.current) {
                     lastPositionRef.current = newCoords;
                     setUserPosition(newCoords);
                     setIsLoadingLocation(false);
+                    setLocationError(null);
                     return;
                 }
 
@@ -147,16 +127,47 @@ export default function MapView() {
                     lng
                 );
 
-                // Only update if user moved more than 30 meters
+                // Update only if user moved > 30m
                 if (distance > 30) {
                     lastPositionRef.current = newCoords;
                     setUserPosition(newCoords);
                 }
+            },
 
-            },
             (error) => {
-                console.log("Location access denied or unavailable.");
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        setLocationError({
+                            type: "DENIED",
+                            message:
+                                "Location permission denied. Please enable it.",
+                        });
+                        break;
+
+                    case error.POSITION_UNAVAILABLE:
+                        setLocationError({
+                            type: "UNAVAILABLE",
+                            message: "Location services are turned off.",
+                        });
+                        break;
+
+                    case error.TIMEOUT:
+                        setLocationError({
+                            type: "TIMEOUT",
+                            message: "Location request timed out.",
+                        });
+                        break;
+
+                    default:
+                        setLocationError({
+                            type: "UNKNOWN",
+                            message: "An unknown location error occurred.",
+                        });
+                }
+
+                setIsLoadingLocation(false);
             },
+
             {
                 enableHighAccuracy: true,
                 maximumAge: 15000,
@@ -211,9 +222,9 @@ export default function MapView() {
     return (
         <div className="h-screen w-full relative overflow-hidden">
             {/* Loader UI  */}
-            {(isLoadingLocation || isLoadingStations) &&(
+            {(isLoadingLocation || isLoadingStations) && (
                 <div className="absolute inset-0 z-10000 flex flex-col items-center justify-center bg-white/70 backdrop-blur-xs">
-{/* 
+                    {/* 
                     <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div> */}
                     <span className="loading loading-spinner loading-lg text-blue-900"></span>
 
@@ -333,15 +344,12 @@ export default function MapView() {
                 onClose={() => setSelectedStation(null)}
             /> */}
 
-
             {/* Request Location Modal */}
             <LocationRequiredModal
                 open={!!locationError}
                 message={locationError?.message}
-                onRetry={requestLocation}
+                onRetry={() => window.location.reload()}
             />
-
-
 
         </div>
 
