@@ -10,10 +10,12 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, } from "lucide-react";
+import { LocateFixedIcon, Route, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
+
+import "leaflet-routing-machine";
 
 
 // Fix default marker icon issue in Next.js
@@ -219,6 +221,66 @@ export default function MapView() {
     // Auto - Center When Everything Is Ready
 
 
+    const routingRef = useRef(null);
+    const mapRef = useRef(null);
+
+    // Routing Function
+    function createRoute(userLocation, stationLocation) {
+
+        const map = mapRef.current;
+
+        if (!map) return;
+
+        // remove existing route
+        if (routingRef.current) {
+            map.removeControl(routingRef.current);
+        }
+
+        routingRef.current = L.Routing.control({
+            waypoints: [
+                L.latLng(userLocation.lat, userLocation.lng),
+                L.latLng(stationLocation.lat, stationLocation.lng),
+            ],
+            routeWhileDragging: false,
+            show: false,
+            addWaypoints: false,
+        }).addTo(map);
+
+        // 📍 Capture route details
+        routingRef.current.on("routesfound", function (e) {
+
+            const route = e.routes[0];
+
+            const distance = route.summary.totalDistance / 1000;
+            const time = route.summary.totalTime / 60;
+
+            console.log(`Distance: ${distance.toFixed(2)} km`);
+            console.log(`ETA: ${time.toFixed(0)} minutes`);
+
+            // zoom map to show entire route
+            map.fitBounds(L.latLngBounds(route.coordinates));
+        });
+    }
+    // Routing Function
+
+    // Detect User Location
+    function getUserLocation() {
+        return new Promise((resolve, reject) => {
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    });
+                },
+                reject
+            );
+
+        });
+    }
+    // Detect User Location
+
     return (
         <div className="h-screen w-full relative overflow-hidden">
             {/* Loader UI  */}
@@ -236,10 +298,13 @@ export default function MapView() {
             )}
 
             <MapContainer
-                center={userPosition || [5.547671, -0.192268]} // lat, lng
+                center={userPosition || [5.547671, -0.192268]}
                 zoom={13}
                 scrollWheelZoom={true}
                 className="h-full w-full"
+                whenCreated={(mapInstance) => {
+                    mapRef.current = mapInstance;
+                }}
             >
 
                 <UserLocationMarker position={userPosition} />
@@ -329,12 +394,34 @@ export default function MapView() {
                         ⭐ {selectedStation.rating}
                     </div>
 
-                    <button
-                        onClick={() => setSelectedStation(null)}
-                        className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2"
-                    >
-                        Close
-                    </button>
+                    <div className=" flex justify-center items-center gap-2">
+
+                        <button
+                            onClick={async () => {
+
+                                const userLocation = await getUserLocation();
+
+                                const stationLocation = {
+                                    lat: selectedStation.location.coordinates[1],
+                                    lng: selectedStation.location.coordinates[0],
+                                };
+
+                                createRoute(userLocation, stationLocation);
+
+                            }}
+                            className="flex justify-center items-center gap-4 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
+                        >
+                            <Route size={20} />
+                            <span>Get Directions</span>
+                        </button>
+                        <button
+                            onClick={() => setSelectedStation(null)}
+                            className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2"
+                        >
+                            Close
+                        </button>
+                    </div>
+
                 </div>
             )}
 
