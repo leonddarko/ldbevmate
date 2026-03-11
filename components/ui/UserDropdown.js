@@ -17,7 +17,7 @@ export default function UserDropdown() {
     }, [update])
 
     return (
-        <div className="absolute top-3 right-3 z-[1000]">
+        <div className="absolute top-15 right-3 z-[1000]">
 
             {session ? (
 

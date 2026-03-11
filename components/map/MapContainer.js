@@ -4,6 +4,10 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useEffect, useState, useRef } from "react";
 import { dummyStations } from "@/lib/dummyStations";
 import L from "leaflet";
+import "leaflet-routing-machine";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+
+
 import { useMap } from "react-leaflet";
 
 import BottomSheet from "../ui/BottomSheet";
@@ -15,8 +19,6 @@ import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
 
-import "leaflet-routing-machine";
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 // Fix default marker icon issue in Next.js
 delete L.Icon.Default.prototype._getIconUrl;
@@ -228,25 +230,32 @@ export default function MapView() {
     function createRoute(userLocation, stationLocation) {
 
         const map = mapRef.current;
-
         if (!map) return;
 
-        // remove existing route
         if (routingRef.current) {
             map.removeControl(routingRef.current);
         }
 
         routingRef.current = L.Routing.control({
+            router: L.Routing.osrmv1({
+                serviceUrl: "https://router.project-osrm.org/route/v1"
+            }),
+
             waypoints: [
                 L.latLng(userLocation.lat, userLocation.lng),
-                L.latLng(stationLocation.lat, stationLocation.lng),
+                L.latLng(stationLocation.lat, stationLocation.lng)
             ],
+
+            createMarker: () => null,
             routeWhileDragging: false,
-            show: false,
             addWaypoints: false,
+            draggableWaypoints: false,
+            fitSelectedRoutes: true,
+
             lineOptions: {
-                styles: [{ color: "#2563eb", weight: 5 }],
-            },
+                styles: [{ color: "#2563eb", weight: 4 }]
+            }
+
         }).addTo(map);
 
         // 📍 Capture route details
@@ -305,8 +314,8 @@ export default function MapView() {
                 zoom={13}
                 scrollWheelZoom={true}
                 className="h-full w-full"
-                whenCreated={(mapInstance) => {
-                    mapRef.current = mapInstance;
+                whenReady={(e) => {
+                    mapRef.current = e.target;
                 }}
             >
 
@@ -408,6 +417,7 @@ export default function MapView() {
                                     lat: userPosition[0],
                                     lng: userPosition[1],
                                 };
+
                                 const stationLocation = {
                                     lat: selectedStation.location.coordinates[1],
                                     lng: selectedStation.location.coordinates[0],
@@ -415,7 +425,8 @@ export default function MapView() {
 
                                 createRoute(userLocation, stationLocation);
 
-
+                                console.log("Creating route:", userLocation, stationLocation);
+                                console.log("Routing:", L.Routing);
                             }}
                             className="flex justify-center items-center gap-4 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
                         >
@@ -424,7 +435,7 @@ export default function MapView() {
                         </button>
                         <button
                             onClick={() => setSelectedStation(null)}
-                            className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2"
+                            className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2 cursor-pointer"
                         >
                             Close
                         </button>
