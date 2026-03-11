@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
 
 import "leaflet-routing-machine";
-
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 // Fix default marker icon issue in Next.js
 delete L.Icon.Default.prototype._getIconUrl;
@@ -244,6 +244,9 @@ export default function MapView() {
             routeWhileDragging: false,
             show: false,
             addWaypoints: false,
+            lineOptions: {
+                styles: [{ color: "#2563eb", weight: 5 }],
+            },
         }).addTo(map);
 
         // 📍 Capture route details
@@ -399,14 +402,19 @@ export default function MapView() {
                         <button
                             onClick={async () => {
 
-                                const userLocation = await getUserLocation();
+                                if (!userPosition) return;
 
+                                const userLocation = {
+                                    lat: userPosition[0],
+                                    lng: userPosition[1],
+                                };
                                 const stationLocation = {
                                     lat: selectedStation.location.coordinates[1],
                                     lng: selectedStation.location.coordinates[0],
                                 };
 
                                 createRoute(userLocation, stationLocation);
+
 
                             }}
                             className="flex justify-center items-center gap-4 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
