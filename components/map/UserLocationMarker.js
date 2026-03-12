@@ -8,7 +8,7 @@ const userIcon = new L.DivIcon({
   html: `
     <div class="relative">
       <span class="absolute inline-flex h-4 w-4 rounded-full bg-blue-600 opacity-75 animate-ping"></span>
-      <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-950 border-2 border-white"></span>
+      <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-900 border-2 border-white"></span>
     </div>
   `,
   iconSize: [20, 20],

@@ -53,7 +53,7 @@ export default function UserDropdown() {
                     <div
                         tabIndex={0}
                         className="
-                        dropdown-content mb-3
+                        dropdown-content mb-12
                         right-0
                         w-80
                         bg-white/10
