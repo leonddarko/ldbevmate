@@ -14,7 +14,7 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, Route, } from "lucide-react";
+import { LocateFixedIcon, Route, X, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
@@ -72,7 +72,10 @@ export default function MapView() {
     const [isLoadingLocation, setIsLoadingLocation] = useState(true);
     const [isLoadingStations, setIsLoadingStations] = useState(true);
     const [hasCentered, setHasCentered] = useState(false);
+
     const [locationError, setLocationError] = useState(null);
+
+    const [isRouting, setIsRouting] = useState(false);
 
     const { data: session } = useSession();
 
@@ -258,6 +261,8 @@ export default function MapView() {
 
         }).addTo(map);
 
+        setIsRouting(true);
+
         // 📍 Capture route details
         routingRef.current.on("routesfound", function (e) {
 
@@ -275,23 +280,21 @@ export default function MapView() {
     }
     // Routing Function
 
-    // Detect User Location
-    function getUserLocation() {
-        return new Promise((resolve, reject) => {
+    // Cancel Routing Function
+    function cancelRoute() {
+        const map = mapRef.current;
 
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    resolve({
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    });
-                },
-                reject
-            );
+        if (!map) return;
 
-        });
+        if (routingRef.current) {
+            map.removeControl(routingRef.current);
+            routingRef.current = null;
+        }
+
+        setIsRouting(false);
     }
-    // Detect User Location
+    // Cancel Routing Function
+
 
     return (
         <div className="h-screen w-full relative overflow-hidden">
@@ -341,9 +344,17 @@ export default function MapView() {
                         // icon={evIcon}
                         icon={station.availabilityStatus === "available" ? greenEvIcon : redEvIcon}
                         eventHandlers={{
-                            click: () => setSelectedStation(station),
+                            click: () => {
+                                // isRouting && cancelRoute()
+                                setSelectedStation(station)
+                            }
                         }}
-                    />
+                    >
+                        {/* <Popup>
+
+                            <h3>{station.name}</h3>
+                        </Popup> */}
+                    </Marker>
                 ))}
 
                 {/* {dummyStations.map((station) => (
@@ -371,7 +382,7 @@ export default function MapView() {
                 }}
                 className="
                 fixed bottom-6 right-3
-                w-12 h-12
+                w-11 h-11
                 rounded-full
                 backdrop-blur-2xl bg-white/10
                 shadow-[0_0_20px_rgba(0,200,255,0.4)]
@@ -407,7 +418,6 @@ export default function MapView() {
                     </div>
 
                     <div className=" flex justify-center items-center gap-2">
-
                         <button
                             onClick={async () => {
 
@@ -424,15 +434,25 @@ export default function MapView() {
                                 };
 
                                 createRoute(userLocation, stationLocation);
-
+                                setSelectedStation(null);
                                 console.log("Creating route:", userLocation, stationLocation);
                                 console.log("Routing:", L.Routing);
                             }}
                             className="flex justify-center items-center gap-4 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
                         >
                             <Route size={20} />
-                            <span>Get Directions</span>
+                            <span>Directions</span>
                         </button>
+                        {/* {isRouting && (
+                            <button
+                                onClick={cancelRoute}
+                                className="
+                            flex justify-center items-center gap-4 mt-4 w-full bg-red-600 text-white hover:bg-blue-red/90 transition rounded-full py-2 cursor-pointer
+                            "
+                            >
+                                End Route
+                            </button>
+                        )} */}
                         <button
                             onClick={() => setSelectedStation(null)}
                             className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2 cursor-pointer"
@@ -442,6 +462,31 @@ export default function MapView() {
                     </div>
 
                 </div>
+            )}
+
+
+
+            {isRouting && (
+                <button
+                    onClick={cancelRoute}
+                    className="
+                    fixed bottom-1/6 left-1/2 -translate-x-1/2
+                    backdrop-blur-2xl
+                    bg-red-500 text-white font-medium
+                    px-5 py-2
+                    rounded-full
+                    shadow-lg
+                    hover:bg-red-600
+                    hover:scale-110
+                    transition-all duration-200
+                    z-9999
+                    cursor-pointer
+                    flex justify-center items-center gap-4
+                    "
+                >
+                    <X size={20} />
+                    <span>End Route</span>
+                </button>
             )}
 
             {/* Bottom Sheet */}

@@ -17,11 +17,12 @@ export default function UserDropdown() {
     }, [update])
 
     return (
-        <div className="absolute top-15 right-3 z-[1000]">
+        // <div className="absolute top-15 right-3 z-1000">
+        <div className="absolute bottom-20 right-3 z-1000">
 
             {session ? (
 
-                <div className="dropdown dropdown-end">
+                <div className="dropdown dropdown-top dropdown-left">
 
                     {/* Avatar Button */}
                     <label
@@ -42,7 +43,7 @@ export default function UserDropdown() {
                     >
                         {/* <User size={20} className="text-blue-950" /> */}
                         <div className="text-blue-950
-                        font-bold text-xl">
+                        font-bold text-lg">
                             {session.user.name?.charAt(0)}
                         </div>
                     </label>
@@ -51,7 +52,8 @@ export default function UserDropdown() {
                     <div
                         tabIndex={0}
                         className="
-                        dropdown-content mt-3
+                        dropdown-content mb-3
+                        right-0
                         w-80
                         bg-white/10
                         backdrop-blur-2xl
