@@ -350,9 +350,12 @@ export default function MapView() {
                             }
                         }}
                     >
-                        <Tooltip permanent direction="left" offset={[-25, -20]}>
+                        <Tooltip permanent direction="left" offset={[-25, -20]} opacity={0.8}>
                             <div className="bg-white/10 backdrop-blur-2xl px-2 py-1 rounded-xl shadow text-[11px]">
                                 <div className="font-bold text-sm text-blue-900">{station.name}</div>
+                                <div className=" text-xs">Status • <span className=" font-bold text-green-800">
+                                    {station.availabilityStatus}
+                                </span></div>
                                 <div className="xs">Connectors • <span className=" font-bold">
                                     {station.connectors.join(", ")}
                                 </span></div>
@@ -409,10 +412,10 @@ export default function MapView() {
                         {selectedStation.name}
                     </h2>
 
-                    <div className="mt-2 flex justify-start gap-1 text-sm">
-                        <span>{selectedStation.powerKW} kW</span>
+                      <div className="mt-2 flex justify-start gap-1 text-sm">
+                        <span>Status</span>
                         <span>•</span>
-                        <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
+                        <span className=" font-medium text-green-700">{selectedStation.availabilityStatus}</span>
                     </div>
 
                     <div className="mt-2 flex justify-start gap-1 text-sm">
@@ -420,6 +423,13 @@ export default function MapView() {
                         <span>•</span>
                         <span className="font-medium">{selectedStation.connectors.join(", ")}</span>
                     </div>
+
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
+                        <span>{selectedStation.powerKW} kW</span>
+                        <span>•</span>
+                        <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
+                    </div>
+
 
                     {/* <div className="mt-3 text-sm text-green-700">
                         {selectedStation.availabilityStatus}
