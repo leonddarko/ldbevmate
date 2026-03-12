@@ -28,6 +28,7 @@ export default function UserDropdown() {
                     <label
                         tabIndex={0}
                         className="
+                        fixed bottom-20 right-3
                         w-11 h-11
                         rounded-full
                         flex items-center justify-center
