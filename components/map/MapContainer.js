@@ -8,7 +8,7 @@ import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 
-import { useMap } from "react-leaflet";
+import { useMap, Tooltip } from "react-leaflet";
 
 import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
@@ -33,14 +33,14 @@ L.Icon.Default.mergeOptions({
 
 const redEvIcon = new L.Icon({
     iconUrl: "/icons/ev-charger-red.svg", // place in /public/icons
-    iconSize: [40, 40],
+    iconSize: [30, 30],
     iconAnchor: [18, 36],
     popupAnchor: [0, -36],
 });
 
 const greenEvIcon = new L.Icon({
     iconUrl: "/icons/ev-charger-green.svg", // place in /public/icons
-    iconSize: [40, 40],
+    iconSize: [30, 30],
     iconAnchor: [18, 36],
     popupAnchor: [0, -36],
 });
@@ -350,10 +350,15 @@ export default function MapView() {
                             }
                         }}
                     >
-                        {/* <Popup>
-
-                            <h3>{station.name}</h3>
-                        </Popup> */}
+                        <Tooltip permanent direction="left" offset={[-25, -20]}>
+                            <div className="bg-white/10 backdrop-blur-2xl px-2 py-1 rounded-xl shadow text-[11px]">
+                                <div className="font-bold text-sm text-blue-900">{station.name}</div>
+                                <div className="xs">Connectors • <span className=" font-bold">
+                                    {station.connectors.join(", ")}
+                                </span></div>
+                                <div className="xs">{station.powerKW}kW • <span className=" font-bold">₵{station.pricePerKWh} / kWh</span> </div>
+                            </div>
+                        </Tooltip>
                     </Marker>
                 ))}
 
@@ -399,25 +404,28 @@ export default function MapView() {
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-6 text-blue-950 transition-all duration-300">
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-5 text-blue-950 transition-all duration-300">
                     <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
 
-                    <div className="mt-3 flex justify-between text-sm opacity-80">
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
                         <span>{selectedStation.powerKW} kW</span>
-                        <span>₵{selectedStation.pricePerKWh}/kWh</span>
+                        <span>•</span>
+                        <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
                     </div>
 
-                    <div className="mt-2 text-sm">
-                        Connectors: {selectedStation.connectors.join(", ")}
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
+                        <span>Connectors</span>
+                        <span>•</span>
+                        <span className="font-medium">{selectedStation.connectors.join(", ")}</span>
                     </div>
 
-                    <div className="mt-3 text-sm">
-                        ⭐ {selectedStation.rating}
-                    </div>
+                    {/* <div className="mt-3 text-sm text-green-700">
+                        {selectedStation.availabilityStatus}
+                    </div> */}
 
-                    <div className=" flex justify-center items-center gap-2">
+                    <div className="mt-2 flex justify-center items-center gap-2">
                         <button
                             onClick={async () => {
 

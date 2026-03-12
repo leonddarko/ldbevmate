@@ -22,7 +22,7 @@ export default function UserDropdown() {
 
             {session ? (
 
-                <div className="dropdown dropdown-top dropdown-left">
+                <div className="dropdown dropdown-top dropdown-left fixed">
 
                     {/* Avatar Button */}
                     <label
@@ -32,12 +32,12 @@ export default function UserDropdown() {
                         w-11 h-11
                         rounded-full
                         flex items-center justify-center
-                        bg-gradient-to-br from-cyan-200/10 to-blue-300/20
-                        backdrop-blur-xl
+                        bg-white/10
+                        backdrop-blur-2xl
                         border border-white/20
                         shadow-[0_0_25px_rgba(0,200,255,0.25)]
                         hover:scale-105
-                        transition-all
+                        transition-all duration-200
                         cursor-pointer
                         
                         "
@@ -53,7 +53,7 @@ export default function UserDropdown() {
                     <div
                         tabIndex={0}
                         className="
-                        dropdown-content mb-12
+                        dropdown-content mb-13
                         right-0
                         w-80
                         bg-white/10
