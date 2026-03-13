@@ -46,3 +46,7 @@
   color: white;
   cursor: pointer;
 }
+
+.leaflet-routing-container {
+  display: none !important;
+}

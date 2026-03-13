@@ -5,7 +5,7 @@ import SideNav from "@/components/layout/Sidenav";
 export default function CpoLayout({ children }) {
   return (
     <>
-      <div className="min-h-screen flex flex-col md:flex-row md:overflow-scroll bg-gray-200/50">
+      <div className="min-h-screen flex flex-col md:flex-row md:overflow-scroll bg-white/50">
 
         <div className="w-full flex-none md:w-72">
         {/* Sidebar */}

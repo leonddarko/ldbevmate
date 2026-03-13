@@ -22,13 +22,16 @@ export default async function StationsPage() {
 
   const stations = await Station.find({ cpo: cpo._id }).lean();
 
+  const Stations =  JSON.parse(JSON.stringify(stations));
+
+
   return (
     <div className="py-6 md:pt-24 px-4 md:px-10 h-screen rounded-lg bg-white/70 shadow-sm overflow-scroll">
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-3xl text-blue-950 font-bold">Your Stations</h1>
         <AddStationModal />
       </div>
-      <CPOStationCard Stations={stations.reverse()} />
+      <CPOStationCard Stations={Stations.reverse()} />
     </div>
   );
 }

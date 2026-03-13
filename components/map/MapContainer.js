@@ -1,9 +1,10 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import { useEffect, useState, useRef } from "react";
 import { dummyStations } from "@/lib/dummyStations";
 import L from "leaflet";
+import "leaflet-rotate";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
@@ -75,7 +76,11 @@ export default function MapView() {
 
     const [locationError, setLocationError] = useState(null);
 
+    const [isRoutingLoading, setIsRoutingLoading] = useState(false);
     const [isRouting, setIsRouting] = useState(false);
+    const [routeInfo, setRouteInfo] = useState(null);
+
+    const [zoomLevel, setZoomLevel] = useState(13);
 
     const { data: session } = useSession();
 
@@ -254,7 +259,7 @@ export default function MapView() {
             addWaypoints: false,
             draggableWaypoints: false,
             fitSelectedRoutes: true,
-
+            show: false,
             lineOptions: {
                 styles: [{ color: "#2563eb", weight: 4 }]
             }
@@ -266,13 +271,21 @@ export default function MapView() {
         // 📍 Capture route details
         routingRef.current.on("routesfound", function (e) {
 
+            setIsRoutingLoading(false);
+
             const route = e.routes[0];
 
             const distance = route.summary.totalDistance / 1000;
             const time = route.summary.totalTime / 60;
 
-            console.log(`Distance: ${distance.toFixed(2)} km`);
-            console.log(`ETA: ${time.toFixed(0)} minutes`);
+            setRouteInfo({
+                name: selectedStation.name,
+                distance: distance.toFixed(2),
+                eta: time.toFixed(0)
+            });
+
+            // console.log(`Distance: ${distance.toFixed(2)} km`);
+            // console.log(`ETA: ${time.toFixed(0)} minutes`);
 
             // zoom map to show entire route
             map.fitBounds(L.latLngBounds(route.coordinates));
@@ -292,9 +305,21 @@ export default function MapView() {
         }
 
         setIsRouting(false);
+        setRouteInfo(null);
     }
     // Cancel Routing Function
 
+
+    // Track map zoom changes for Tooltips
+    function ZoomWatcher({ setZoomLevel }) {
+        useMapEvents({
+            zoomend(e) {
+                setZoomLevel(e.target.getZoom());
+            },
+        });
+
+        return null;
+    }
 
     return (
         <div className="h-screen w-full relative overflow-hidden">
@@ -316,6 +341,9 @@ export default function MapView() {
                 center={userPosition || [5.547671, -0.192268]}
                 zoom={13}
                 scrollWheelZoom={true}
+                rotate={true}
+                touchRotate={true}
+                rotateControl={true}
                 className="h-full w-full"
                 whenReady={(e) => {
                     mapRef.current = e.target;
@@ -328,6 +356,8 @@ export default function MapView() {
                     position={userPosition}
                     centerTrigger={centerTrigger}
                 />
+
+                <ZoomWatcher setZoomLevel={setZoomLevel} />
 
                 <TileLayer
                     attribution='&copy; OpenStreetMap contributors'
@@ -342,7 +372,9 @@ export default function MapView() {
                             station.location.coordinates[0],
                         ]}
                         // icon={evIcon}
-                        icon={station.availabilityStatus === "available" ? greenEvIcon : redEvIcon}
+                        icon={station.availabilityStatus === "available"
+                            ? greenEvIcon
+                            : redEvIcon}
                         eventHandlers={{
                             click: () => {
                                 // isRouting && cancelRoute()
@@ -350,18 +382,20 @@ export default function MapView() {
                             }
                         }}
                     >
-                        <Tooltip permanent direction="left" offset={[-25, -20]} opacity={0.8}>
-                            <div className="bg-white/10 backdrop-blur-2xl px-2 py-1 rounded-xl shadow text-[11px]">
-                                <div className="font-bold text-sm text-blue-900">{station.name}</div>
-                                <div className=" text-xs">Status • <span className=" font-bold text-green-800">
-                                    {station.availabilityStatus}
-                                </span></div>
-                                <div className="xs">Connectors • <span className=" font-bold">
-                                    {station.connectors.join(", ")}
-                                </span></div>
-                                <div className="xs">{station.powerKW}kW • <span className=" font-bold">₵{station.pricePerKWh} / kWh</span> </div>
-                            </div>
-                        </Tooltip>
+                        {zoomLevel >= 15 && (
+                            <Tooltip permanent direction="left" offset={[-25, -20]} opacity={0.8}>
+                                <div className="bg-white/10 backdrop-blur-2xl px-2 py-1 rounded-xl shadow text-[11px]">
+                                    <div className="font-bold text-sm text-blue-900">{station.name}</div>
+                                    <div className=" text-xs">Status • <span className=" font-bold text-green-800">
+                                        {station.availabilityStatus}
+                                    </span></div>
+                                    <div className="xs">Connectors • <span className=" font-bold">
+                                        {station.connectors.join(", ")}
+                                    </span></div>
+                                    <div className="xs">{station.powerKW}kW • <span className=" font-bold">₵{station.pricePerKWh} / kWh</span> </div>
+                                </div>
+                            </Tooltip>
+                        )}
                     </Marker>
                 ))}
 
@@ -412,7 +446,7 @@ export default function MapView() {
                         {selectedStation.name}
                     </h2>
 
-                      <div className="mt-2 flex justify-start gap-1 text-sm">
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
                         <span>Status</span>
                         <span>•</span>
                         <span className=" font-medium text-green-700">{selectedStation.availabilityStatus}</span>
@@ -440,6 +474,8 @@ export default function MapView() {
                             onClick={async () => {
 
                                 if (!userPosition) return;
+
+                                setIsRoutingLoading(true);
 
                                 const userLocation = {
                                     lat: userPosition[0],
@@ -483,8 +519,27 @@ export default function MapView() {
             )}
 
 
+            {isRoutingLoading && (
+                <button
+                    className="
+                    fixed bottom-1/6 left-1/2 -translate-x-1/2
+                    backdrop-blur-2xl
+                    bg-blue-600/80 text-white font-medium
+                    px-5 py-2
+                    rounded-full
+                    shadow-lg
+                    transition-all duration-200
+                    z-9999
+                    flex justify-center items-center gap-3 btn-disabled
+                    "
+                >
+                    <span className="loading loading-spinner loading-sm"></span>
+                    <span>Calculating Route...</span>
+                </button>
+            )}
 
-            {isRouting && (
+
+            {!isRoutingLoading && isRouting && (
                 <button
                     onClick={cancelRoute}
                     className="
@@ -505,6 +560,53 @@ export default function MapView() {
                     <X size={20} />
                     <span>End Route</span>
                 </button>
+            )}
+
+            {routeInfo && (
+                <div
+                    className="
+                    fixed top-4 left-1/2 -translate-x-1/2
+                    backdrop-blur-2xl
+                    bg-white/20
+                    border border-white/30
+                    shadow-[0_8px_40px_rgba(0,0,0,0.25)]
+                    rounded-2xl
+                    px-5 py-3
+                    flex justify-between items-start gap-6
+                    z-9999
+                    transition-all duration-300 
+                    w-92
+                    "
+                >
+
+                    <div className="flex flex-col items-start">
+                        <span className="text-xs opacity-80">
+                            Destination Charger
+                        </span>
+                        <span className="text-xs font-bold text-blue-800">
+                            {routeInfo.name}
+                        </span>
+                    </div>
+
+                    {/* <div className="w-px h-8 bg-white/40"></div> */}
+
+                    <div className="flex flex-col items-start text-center">
+                        <span className="text-xs opacity-80">Distance</span>
+                        <span className="text-xs font-bold text-blue-800">
+                            {routeInfo.distance} km
+                        </span>
+                    </div>
+
+                    {/* <div className="w-px h-8 bg-white/40"></div> */}
+
+                    <div className="flex flex-col items-start text-center">
+                        <span className="text-xs opacity-80">ETA</span>
+                        <span className="text-xs font-bold text-blue-800">
+                            {routeInfo.eta} min
+                        </span>
+                    </div>
+
+                </div>
             )}
 
             {/* Bottom Sheet */}

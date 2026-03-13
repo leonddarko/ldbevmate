@@ -13,6 +13,7 @@
     "daisyui": "^5.5.18",
     "framer-motion": "^12.34.2",
     "leaflet": "^1.9.4",
+    "leaflet-rotate": "^0.2.8",
     "leaflet-routing-machine": "^3.2.12",
     "lucide-react": "^0.575.0",
     "mapbox-gl": "^3.18.1",
