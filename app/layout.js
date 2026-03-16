@@ -2,7 +2,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import "mapbox-gl/dist/mapbox-gl.css";
 
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/lib/SessionProvider";

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const MapView = dynamic(() => import("@/components/map/MapboxMapContainer"), {
+const MapView = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
 });
 
