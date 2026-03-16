@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaf
 import { useEffect, useState, useRef } from "react";
 import { dummyStations } from "@/lib/dummyStations";
 import L from "leaflet";
-import "leaflet-rotate";
+// import "leaflet-rotate";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
@@ -341,9 +341,9 @@ export default function MapView() {
                 center={userPosition || [5.547671, -0.192268]}
                 zoom={13}
                 scrollWheelZoom={true}
-                rotate={true}
-                touchRotate={true}
-                rotateControl={true}
+                // rotate={true}
+                // touchRotate={true}
+                // rotateControl={true}
                 className="h-full w-full"
                 whenReady={(e) => {
                     mapRef.current = e.target;
@@ -543,7 +543,7 @@ export default function MapView() {
                 <button
                     onClick={cancelRoute}
                     className="
-                    fixed bottom-1/6 left-1/2 -translate-x-1/2
+                    fixed bottom-1/12 left-1/2 -translate-x-1/2
                     backdrop-blur-2xl
                     bg-red-500 text-white font-medium
                     px-5 py-2
@@ -565,8 +565,8 @@ export default function MapView() {
             {routeInfo && (
                 <div
                     className="
-                    fixed top-4 left-1/2 -translate-x-1/2
-                    backdrop-blur-2xl
+                    fixed bottom-1/6 left-1/2 -translate-x-1/2
+                    backdrop-blur-md
                     bg-white/20
                     border border-white/30
                     shadow-[0_8px_40px_rgba(0,0,0,0.25)]
@@ -580,7 +580,7 @@ export default function MapView() {
                 >
 
                     <div className="flex flex-col items-start">
-                        <span className="text-xs opacity-80">
+                        <span className="text-xs text-blue-950 opacity-80">
                             Destination Charger
                         </span>
                         <span className="text-xs font-bold text-blue-800">
@@ -591,7 +591,7 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs opacity-80">Distance</span>
+                        <span className="text-xs text-blue-950 opacity-80">Distance</span>
                         <span className="text-xs font-bold text-blue-800">
                             {routeInfo.distance} km
                         </span>
@@ -600,7 +600,7 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs opacity-80">ETA</span>
+                        <span className="text-xs text-blue-950 opacity-80">ETA</span>
                         <span className="text-xs font-bold text-blue-800">
                             {routeInfo.eta} min
                         </span>
