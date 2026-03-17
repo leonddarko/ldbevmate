@@ -26,7 +26,7 @@ export default async function StationsPage() {
 
 
   return (
-    <div className="py-6 md:pt-24 px-4 md:px-10 h-screen rounded-lg bg-white/70 shadow-sm overflow-scroll">
+    <div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-lg bg-white shadow-sm overflow-scroll">
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-3xl text-blue-950 font-bold">Your Stations</h1>
         <AddStationModal />

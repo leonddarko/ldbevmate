@@ -1,14 +1,15 @@
 "use client";
 
 import SideNav from "@/components/layout/Sidenav";
-
+``
 export default function CpoLayout({ children }) {
   return (
     <>
-      <div className="min-h-screen flex flex-col md:flex-row md:overflow-scroll bg-white/50">
+      <div className="min-h-screen flex flex-col md:flex-row md:overflow-scroll bg-white/50
+       bg-[url(/backgroundimages/ev-charging-station_tp.jpg)] bg-cover bg-center bg-no-repeat bg-fixed">
 
         <div className="w-full flex-none md:w-72">
-        {/* Sidebar */}
+          {/* Sidebar */}
           <SideNav />
         </div>
 

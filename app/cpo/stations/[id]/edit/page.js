@@ -1,13 +1,277 @@
-export default function EditStationPage({ params }) {
-    console.log(params);
-    
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">
-        Edit Station: {params.id}
-      </h1>
+"use client";
 
-      <p>Form goes here...</p>
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+const CONNECTOR_OPTIONS = ["Type2", "CCS", "CHAdeMO", "GB/T", "Tesla"];
+
+export default function EditStationPage() {
+
+  const { id } = useParams();
+
+  const [form, setForm] = useState({
+    id: null,
+    name: "",
+    description: "",
+    address: "",
+    latitude: "",
+    longitude: "",
+    connectors: [],
+    powerKW: "",
+    pricePerKWh: "",
+    availabilityStatus: "available",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  // Fetch station
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchStation = async () => {
+      const res = await fetch(`/api/stations/${id}`);
+      const data = await res.json();
+
+      const station = data.station;
+
+      setForm({
+        id: id,
+        name: station.name || "",
+        description: station.description || "",
+        address: station.address || "",
+        latitude: station.location.coordinates[1],
+        longitude: station.location.coordinates[0],
+        connectors: station.connectors || [],
+        powerKW: station.powerKW || "",
+        pricePerKWh: station.pricePerKWh || "",
+        availabilityStatus: station.availabilityStatus || "available",
+      });
+    };
+
+    fetchStation();
+  }, [id]);
+
+  // Handlers
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleConnectorChange = (connector) => {
+    setForm((prev) => ({
+      ...prev,
+      connectors: prev.connectors.includes(connector)
+        ? prev.connectors.filter((c) => c !== connector)
+        : [...prev.connectors, connector],
+    }));
+  };
+
+
+  // Submit (UPDATE)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const res = await fetch(`/api/stations/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...form,
+        latitude: parseFloat(form.latitude),
+        longitude: parseFloat(form.longitude),
+        powerKW: Number(form.powerKW),
+        pricePerKWh: Number(form.pricePerKWh),
+      }),
+    });
+
+    setLoading(false);
+
+    if (res.ok) {
+      router.push("/cpo/stations");
+      alert("Station updated successfully");
+    } else {
+      router.push("/cpo/stations");
+      alert("Failed to update station");
+    }
+  };
+
+  return (
+    <div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-2xl 
+  bg-white/70 backdrop-blur-xl border border-white/30 overflow-scroll">
+
+      <div className="mb-8">
+        {/* <span className="loading loading-spinner loading-lg text-blue-900"></span> */}
+
+        <h1 className="text-3xl md:text-4xl font-bold text-blue-950 tracking-tight">
+          Edit Station
+        </h1>
+        <span className=" text-xs">{id}</span>
+
+      </div>
+
+      <div className="backdrop-blur-2xl bg-blue-50/30 border border-blue-100/40 rounded-3xl p-6 ">
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label className="label text-xs">Name</label>
+            <input
+              type="text"
+              name="name"
+              required
+              className="input input-sm bg-white/50 border border-none shadow w-full rounded-2xl focus:outline-0 focus:border-none"
+              value={form.name}
+              onChange={handleChange}
+            // placeholder="Name of Station"
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="label text-xs">Description</label>
+            <textarea
+              name="description"
+              className="textarea textarea-sm textarea-bordered bg-white/50 border border-none shadow w-full rounded-2xl"
+              value={form.description}
+              onChange={handleChange}
+            // placeholder="Description"
+            />
+          </div>
+
+          {/* Address */}
+          <div>
+            <label className="label text-xs">Address</label>
+            <input
+              type="text"
+              name="address"
+              required
+              className="input input-sm input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
+              value={form.address}
+              onChange={handleChange}
+              placeholder="Address"
+            />
+          </div>
+
+          {/* Coordinates */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="label text-xs">Latitude</label>
+              <input
+                type="number"
+                step="any"
+                name="latitude"
+                required
+                className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-full"
+                value={form.latitude}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="label text-xs">Longitude</label>
+              <input
+                type="number"
+                step="any"
+                name="longitude"
+                required
+                className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-full"
+                value={form.longitude}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {/* Connectors */}
+          <div>
+            <label className="label text-xs">Connectors</label>
+            <div className="flex flex-wrap gap-2">
+              {CONNECTOR_OPTIONS.map((connector) => (
+                <label key={connector} className="cursor-pointer label gap-2">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-xs bg-white/80"
+                    checked={form.connectors.includes(connector)}
+                    onChange={() => handleConnectorChange(connector)}
+                  />
+                  <span className="label-text text-sm text-blue-950">{connector}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {/* Power */}
+            <div>
+              <label className="label text-xs">Power (kW)</label>
+              <input
+                type="number"
+                name="powerKW"
+                required
+                className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
+                value={form.powerKW}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Price */}
+            <div>
+              <label className="label text-xs">Price per kWh</label>
+              <input
+                type="number"
+                step="0.01"
+                name="pricePerKWh"
+                className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
+                value={form.pricePerKWh}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+
+          {/* Status */}
+          <div>
+            <label className="label text-xs">Availability</label>
+            <select
+              name="availabilityStatus"
+              className="select select-sm select-bordered bg-white/50 border border-none shadow w-full rounded-3xl text-blue-950"
+              value={form.availabilityStatus}
+              onChange={handleChange}
+            >
+              <option value="available">Available</option>
+              <option value="busy">Busy</option>
+              <option value="offline">Offline</option>
+            </select>
+          </div>
+
+          {/* Update Button */}
+          <button
+            type="submit"
+            className="btn btn-neutral border-none bg-blue-950 rounded-full text-white w-full"
+            disabled={loading}
+          >
+            {loading ?
+              <span className="flex justify-center items-center gap-2 font-semibold">
+                <Save size={20} className=" animate-ping" />
+                Updating...
+              </span>
+              : "Update"}
+          </button>
+        </form>
+
+      </div>
+
+
     </div>
   );
 }

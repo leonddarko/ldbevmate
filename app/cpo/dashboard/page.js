@@ -25,9 +25,8 @@ export default function DashboardPage() {
   }, []);
 
   return (
-<div className="py-6 md:pt-24 px-4 md:px-10 h-screen rounded-2xl 
-  bg-white/70 backdrop-blur-xl border border-white/30 
-  shadow-md overflow-scroll">
+<div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-2xl 
+  bg-white shadow-md overflow-scroll">
 
   <div className="flex flex-wrap justify-between items-center gap-2 mb-8">
 
@@ -56,8 +55,8 @@ export default function DashboardPage() {
         bg-gradient-to-br from-white/60 to-blue-100/30
         backdrop-blur-xl
         border border-white/40
-        shadow-[0_5px_15px_rgba(0,0,0,0.08)]
-        hover:shadow-sm
+        shadow-sm
+        hover:shadow-[0_5px_15px_rgba(0,0,0,0.08)]
         transition-all duration-300
       ">
 

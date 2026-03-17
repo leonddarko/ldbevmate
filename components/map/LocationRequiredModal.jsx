@@ -14,7 +14,7 @@ export default function LocationRequiredModal({
                 modal-box 
                 relative
                 bg-white/20
-                backdrop-blur-2xl
+                backdrop-blur-md
                 border border-white/30
                 shadow-2xl
                 rounded-3xl

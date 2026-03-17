@@ -32,7 +32,7 @@ export default function UserDropdown() {
                         rounded-full
                         flex items-center justify-center
                         bg-white/10
-                        backdrop-blur-2xl
+                        backdrop-blur-md
                         border border-white/20
                         shadow-[0_0_25px_rgba(0,200,255,0.25)]
                         hover:scale-105
@@ -56,7 +56,7 @@ export default function UserDropdown() {
                         right-0
                         w-80
                         bg-white/10
-                        backdrop-blur-2xl
+                        backdrop-blur-md
                         border border-white/20
                         rounded-3xl
                         shadow-[0_0_25px_rgba(0,200,255,0.2)]

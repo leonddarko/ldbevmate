@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { DoorOpen, Dot, EllipsisVerticalIcon, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, ShieldCheck, ShieldOff } from "lucide-react";
+import { CheckCircle2, CircleX, DoorOpen, Dot, EllipsisVerticalIcon, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, ShieldCheck, ShieldOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
@@ -57,7 +57,7 @@ export default function SideNav() {
         <>
             <div className="h-full flex flex-col justify-start py-2 md:ps-1">
 
-                <div className="flex justify-between items-center gap-4 px-2 py-2 md:py-6 rounded-lg shadow-sm mb-2 border border-zinc-200 bg-white">
+                <div className="flex justify-between md:justify-start items-center gap-4 px-2 py-4 md:py-6 rounded-lg shadow-sm mb-1 border border-zinc-200 bg-white">
                     <Link href="/cpo/dashboard">
                         <div className="flex justify-start items-center gap-2">
                             <HousePlug size={50} className=" text-blue-950" />
@@ -67,7 +67,11 @@ export default function SideNav() {
                                 </>)}
                                 <h1 className="font-notosans font-black text-blue-950 text-xl leading-none">{cpo?.companyName}</h1>
 
-                                <p className="font-notosans font-normal text-blue-950 text-xs leading-none pl-0.5">CPO Panel</p>
+                                <p className="font-notosans font-normal text-blue-950 text-xs leading-none pl-0.5 mb-1">CPO Panel</p>
+
+                                {cpo?.verified === true ?
+                                    <CheckCircle2 size={15} className="text-green-900 " />
+                                    : <CircleX size={15} className=" text-amber-800 " />}
                             </div>
                         </div>
                     </Link>
@@ -75,7 +79,7 @@ export default function SideNav() {
                     {/* Small Screen Navigation */}
                     <div className="dropdown dropdown-end md:hidden">
                         <button tabIndex={0} role="button"
-                            className="btn py-0 p-2 border-0 text-blue-950 bg-white hover:bg-zinc-100">
+                            className="btn py-0 p-2 border-0 text-blue-950 bg-white hover:bg-zinc-100 shadow-none">
                             <EllipsisVerticalIcon size={20} />
                         </button>
                         <ul tabIndex={0} className="dropdown-content menu rounded-3xl z-1000 w-80 p-2 shadow-md mt-5 bg-white border border-zinc-200">
@@ -132,7 +136,7 @@ export default function SideNav() {
 
                 {/* User Id */}
                 {session && (
-                    <div className="flex justify-between items-center gap-1.5 bg-cyan-50 text-black/40 p-4 rounded-2xl shadow-sm transition-all mb-2 border border-zinc-100">
+                    <div className="flex justify-between items-center gap-1.5 bg-cyan-50 text-black/40 p-4 rounded-lg transition-all mb-1 border border-zinc-100">
                         <div className="flex justify-start items-center gap-1.5">
                             <div className="flex flex-col">
                                 <IdCardLanyard className=" text-cyan-950" size={25} />
@@ -144,15 +148,13 @@ export default function SideNav() {
 
                             </div>
                         </div>
-                        {cpo?.verified === true ?
-                            <ShieldCheck size={18} className="text-green-900" />
-                            : <ShieldOff size={18} className=" text-amber-800" />}
+                            {/* <EvCharger size={18} className="text-green-900" /> */}
                     </div>
                 )}
                 {/* User Id */}
 
 
-                <ul tabIndex={0} className="dropdown-content menu rounded-lg z-4 w-auto ps-4 py-2 shadow-sm bg-white hidden md:block border border-zinc-100">
+                <ul tabIndex={0} className="dropdown-content menu rounded-2xl z-4 w-auto ps-4 py-2 bg-white hidden md:block border border-zinc-100">
                     {navlinks.slice(0, 3).map((item) => (
                         <a key={item.id} href={item.path} className="flex justify-between items-center gap-2 text-blue-950/50 transition-all mb-2 last:mb-0">
                             <div className="flex items-center gap-2 text-blue-950/50">
@@ -168,7 +170,7 @@ export default function SideNav() {
 
                 <button
                     onClick={() => signOut({ callbackUrl: "/sign-in" })}
-                    className="hidden md:flex btn-ghost justify-between items-center gap-2 bg-zinc-50 text-black/40 ps-4 py-2 px-2 rounded-lg shadow-sm mb-1 hover:bg-red-50 transition-all mt-2 cursor-pointer">
+                    className="hidden md:flex btn-ghost justify-between items-center gap-2 bg-zinc-50 text-black/40 ps-4 py-2 px-2 rounded-lg mb-1 hover:bg-red-50 transition-all mt-1 cursor-pointer">
                     <div className="flex items-center gap-2 text-black">
                         <DoorOpen size={20} className="text-red-700" />
                         <span className={` font-semibold font-notosans text-red-700 text-sm`}>Signout</span>

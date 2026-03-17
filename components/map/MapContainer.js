@@ -426,7 +426,7 @@ export default function MapView() {
                 fixed bottom-6 right-3
                 w-11 h-11
                 rounded-full
-                backdrop-blur-2xl bg-white/10
+                backdrop-blur-md bg-white/10
                 shadow-[0_0_20px_rgba(0,200,255,0.4)]
                 border border-white/20
                 flex items-center justify-center
@@ -534,7 +534,8 @@ export default function MapView() {
                     "
                 >
                     <span className="loading loading-spinner loading-sm"></span>
-                    <span>Calculating Route...</span>
+                    <span className="md:hidden">Calculating...</span>
+                    <span className="hidden md:inline-block">Calculating Route...</span>
                 </button>
             )}
 
