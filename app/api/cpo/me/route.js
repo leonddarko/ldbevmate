@@ -11,6 +11,9 @@ export async function GET() {
 
     const session = await getServerSession(authOptions);
 
+    console.log(session.user.role);
+    
+
     if (!session) {
       return NextResponse.json(
         { message: "Unauthorized" },
@@ -18,12 +21,19 @@ export async function GET() {
       );
     }
 
-    if (session.user.role !== "cpo") {
-      return NextResponse.json(
-        { message: "Forbidden" },
-        { status: 403 }
-      );
-    }
+    // if (session.user.role !== "admin") {
+    //   return NextResponse.json(
+    //     { message: "Forbidden" },
+    //     { status: 403 }
+    //   );
+    // }
+
+    //     if (session.user.role !== "cpo") {
+    //   return NextResponse.json(
+    //     { message: "Forbidden" },
+    //     { status: 403 }
+    //   );
+    // }
 
     const cpo = await CPO.findOne({ user: session.user.id })
       .populate("user", "name email");

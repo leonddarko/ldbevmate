@@ -44,7 +44,7 @@ export default function SideNav() {
 
             if (res.ok) {
                 setCpo(data.cpo);
-                // console.log(data);
+                console.log(data);
             }
 
             setLoading(false);
