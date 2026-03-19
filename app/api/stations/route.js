@@ -118,3 +118,20 @@ export async function POST(req) {
     );
   }
 }
+
+
+export async function GET() {
+  try {
+    await connectDB();
+
+    const stations = await Station.find().sort({ createdAt: -1 });
+
+    return NextResponse.json(stations);
+
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch stations" },
+      { status: 500 }
+    );
+  }
+}

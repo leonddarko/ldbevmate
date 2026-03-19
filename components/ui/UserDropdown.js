@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
-import { User, LayoutDashboard, LogOut, DoorOpen } from "lucide-react"
+import { User, LayoutDashboard, LogOut, DoorOpen, ShieldUser } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect } from "react"
@@ -18,7 +18,7 @@ export default function UserDropdown() {
 
     return (
         // <div className="absolute bottom-20 right-3 z-1000">
-         <div className="absolute top-3 right-3 z-1000">
+        <div className="absolute top-3 right-3 z-1000">
 
             {session ? (
 
@@ -79,8 +79,28 @@ export default function UserDropdown() {
 
                         {/* Menu */}
                         <div className="p-2 space-y-1">
+                            {session.user.role === "admin" && (
 
-                            {session.user.role === "cpo" && (
+                                <Link
+                                    href="/admin"
+                                    className="
+                                    flex items-center gap-3
+                                    px-4 py-2
+                                    rounded-xl
+                                    text-blue-950
+                                    hover:bg-blue-500/10
+                                    transition
+                                    "
+                                >
+                                    <ShieldUser size={18} />
+                                    <span className="font-medium">
+                                        Administrator
+                                    </span>
+                                </Link>
+
+                            )}
+
+                            {session.user.role === "cpo" || session.user.role === "admin" && (
 
                                 <Link
                                     href="/cpo/dashboard"

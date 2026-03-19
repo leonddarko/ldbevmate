@@ -25,32 +25,32 @@ export default function DashboardPage() {
   }, []);
 
   return (
-<div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-2xl 
+    <div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-2xl 
   bg-white shadow-md overflow-scroll">
 
-  <div className="flex flex-wrap justify-between items-center gap-2 mb-8">
+      <div className="flex flex-wrap justify-between items-center gap-2 mb-8">
 
-    {loading && (
-      <span className="loading loading-spinner loading-lg text-blue-900"></span>
-    )}
+        {loading && (
+          <span className="loading loading-spinner loading-lg text-blue-900"></span>
+        )}
 
-    {cpo && (
-      <h1 className="text-3xl md:text-4xl font-bold text-blue-950 tracking-tight">
-        {cpo?.companyName}
-      </h1>
-    )}
+        {cpo && (
+          <h1 className="text-3xl md:text-4xl font-bold text-blue-950 tracking-tight">
+            {cpo?.companyName}
+          </h1>
+        )}
 
-  </div>
+      </div>
 
 
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    {loading && (
-      <span className="loading loading-spinner loading-lg text-blue-950"></span>
-    )}
+        {loading && (
+          <span className="loading loading-spinner loading-lg text-blue-950"></span>
+        )}
 
-    {stations && (
-      <div className="
+        {stations && (
+          <div className="
         relative p-6 rounded-2xl
         bg-gradient-to-br from-white/60 to-blue-100/30
         backdrop-blur-xl
@@ -60,18 +60,18 @@ export default function DashboardPage() {
         transition-all duration-300
       ">
 
-        <h2 className="text-sm font-medium text-blue-900/70">
-          Total Stations
-        </h2>
+            <h2 className="text-sm font-medium text-blue-900/70">
+              Total Stations
+            </h2>
 
-        <p className="text-5xl mt-3 font-bold text-blue-950 tracking-tight">
-          {stations?.length}
-        </p>
+            <p className="text-5xl mt-3 font-bold text-blue-950 tracking-tight">
+              {stations?.length}
+            </p>
+
+          </div>
+        )}
 
       </div>
-    )}
-
-  </div>
-</div>
+    </div>
   );
 }

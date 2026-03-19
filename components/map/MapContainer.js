@@ -441,7 +441,7 @@ export default function MapView() {
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-2xl bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-5 text-blue-950 transition-all duration-300">
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-5 text-blue-950 transition-all duration-300">
                     <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
@@ -497,16 +497,6 @@ export default function MapView() {
                             <Route size={20} />
                             <span>Directions</span>
                         </button>
-                        {/* {isRouting && (
-                            <button
-                                onClick={cancelRoute}
-                                className="
-                            flex justify-center items-center gap-4 mt-4 w-full bg-red-600 text-white hover:bg-blue-red/90 transition rounded-full py-2 cursor-pointer
-                            "
-                            >
-                                End Route
-                            </button>
-                        )} */}
                         <button
                             onClick={() => setSelectedStation(null)}
                             className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2 cursor-pointer"
