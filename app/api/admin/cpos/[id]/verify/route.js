@@ -15,7 +15,7 @@ export async function PATCH(req, context) {
         const session = await getServerSession(authOptions);
 
         // 🔐 Only admins allowed
-        if (!session || session.user.role !== "cpo") {
+        if (!session || session.user.role !== "admin") {
             return NextResponse.json(
                 { message: "Unauthorized" },
                 { status: 403 }

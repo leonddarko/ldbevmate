@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, AtSign, BadgeAlert, BadgeCheck, Building, Dot, User } from "lucide-react";
+import { ArrowLeft, AtSign, Badge, BadgeAlert, BadgeCheck, Building, Dot, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -70,13 +70,24 @@ export default function AdminCPOPage() {
         {cpos.map(cpo => (
           <div key={cpo._id} className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200 min-w-xs">
             <p className=" text-blue-950 font-medium">{cpo.companyName}</p>
-            <p className="text-sm opacity-70 flex justify-start items-center gap-1">
-              <AtSign size={15} className=" text-blue-950" />
-              {cpo.user?.email}
+            <p className="text- opacity-70 flex justify-start items-center gap-1">
+              <User size={15} className=" text-blue-950/70" />
+              <span className="text-blue-950">
+                {cpo.user?.name}
+              </span>
             </p>
             <p className="text-sm opacity-70 flex justify-start items-center gap-1">
-              <User size={15} className=" text-blue-950" />
-              {cpo.user?.name}
+              <AtSign size={15} className=" text-blue-950/70" />
+              <span className=" text-black/60">
+                {cpo.user?.email}
+              </span>
+            </p>
+            <p className="text-sm opacity-70 flex justify-start items-center gap-1">
+              <Badge size={15} className=" text-blue-950/70" />
+              <span className={`font-bold ${cpo.verified === true ? " text-green-950" : " text-red-800"}`}>
+                {cpo.verified === true ? "Verified" : "Unconfirmed"}
+              </span>
+
             </p>
 
 
@@ -85,7 +96,7 @@ export default function AdminCPOPage() {
               {cpo.verified === false && (<>
                 <button
                   disabled={loadingId === cpo._id}
-                  className="btn btn-xs bg-green-900 text-white border-none rounded-full shadow flex justify-between"
+                  className="btn btn-sm bg-green-900 text-white border-none rounded-full shadow flex justify-between"
                   onClick={() => updateCPOStatus(cpo._id, true)}
                 >
                   {loadingId === cpo._id ?
@@ -98,7 +109,7 @@ export default function AdminCPOPage() {
                     <span
                       type="submit"
                       className="flex justify-center items-center gap-2 font-semibold">
-                      <BadgeCheck size={13} />
+                      <BadgeCheck size={20} />
                       Verify
                     </span>
                   }
@@ -111,7 +122,7 @@ export default function AdminCPOPage() {
                 <>
                   <button
                     disabled={loadingId === cpo._id}
-                    className="btn btn-xs bg-red-700 text-white border-none rounded-full shadow flex justify-between"
+                    className="btn btn-sm bg-red-700 text-white border-none rounded-full shadow flex justify-between"
                     onClick={() => updateCPOStatus(cpo._id, false)}
                   >
                     {loadingId === cpo._id ?
@@ -124,7 +135,7 @@ export default function AdminCPOPage() {
                       <span
                         type="submit"
                         className="flex justify-center items-center gap-2 font-semibold">
-                        <BadgeAlert size={13} />
+                        <BadgeAlert size={20} />
                         Refute
                       </span>
                     }

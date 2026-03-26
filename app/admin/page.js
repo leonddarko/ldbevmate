@@ -1,7 +1,7 @@
 "use client"
 
-import { Building, ChevronRight, Dot, EvCharger, Map, ShieldUser, Users } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Building, ChevronRight, DoorOpen, Dot, EvCharger, Map, ShieldUser, Users } from "lucide-react";
+import {signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -12,21 +12,9 @@ export default function AdminDashboard() {
 
     const { data: session, status, update } = useSession({ required: "true" });
     useEffect(() => {
-        update(); // force refetch from /api/auth/session
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        update(); 
     }, []);
 
-    console.log(session.user);
-
-    // const router = useRouter();
-
-    // useEffect(() => {
-    //     if (status === "loading") return;
-
-    //     if (!session || session?.user?.role !== "admin") {
-    //         router.push("/");
-    //     }
-    // }, [session, status]);
 
     return (
         <>
@@ -51,7 +39,7 @@ export default function AdminDashboard() {
                             </div>
                         </div>
                     </Link>
-                    
+
                     <Link href="/admin/cpos">
                         <div className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200">
                             <div className="flex justify-between items-center gap-2">
@@ -97,6 +85,20 @@ export default function AdminDashboard() {
                         </div>
                     </Link>
                 </div>
+
+                <button
+                    className="btn btn-sm bg-red-800 text-white border-none rounded-full shadow flex justify-between mt-4"
+                    onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                >
+
+                    <span
+                        type="submit"
+                        className="flex justify-center items-center gap-2 font-semibold">
+                        <DoorOpen size={20} />
+                        Sign out
+                    </span>
+
+                </button>
             </div>
         </>
     )

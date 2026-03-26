@@ -3,13 +3,17 @@
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, CircleX, DoorOpen, Dot, EllipsisVerticalIcon, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, ShieldCheck, ShieldOff } from "lucide-react";
+import { CheckCircle2, CircleX, DoorOpen, Dot, EllipsisVerticalIcon, EvCharger, HousePlug, IdCardLanyard, LayoutDashboardIcon, Map, MapIcon, MoveRight, Shield, ShieldCheck, ShieldOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 export default function SideNav() {
 
     const { data: session, status, update } = useSession({ required: "true" });
+
+    useEffect(() => {
+        update()
+    }, [update])
 
     const pathname = usePathname()
 
@@ -148,13 +152,27 @@ export default function SideNav() {
 
                             </div>
                         </div>
-                            {/* <EvCharger size={18} className="text-green-900" /> */}
+                        {/* <EvCharger size={18} className="text-green-900" /> */}
                     </div>
                 )}
                 {/* User Id */}
 
 
                 <ul tabIndex={0} className="dropdown-content menu rounded-2xl z-4 w-auto ps-4 py-2 bg-white hidden md:block border border-zinc-100">
+                    {session.user.role === "admin" && (
+                        <>
+                            <a href="/admin" className="flex justify-between items-center gap-2 text-blue-950/50 transition-all mb-2 last:mb-0">
+                                <div className="flex items-center gap-2 text-blue-950/50">
+                                    <Shield size={20} className={`text-blue-950"}`} />
+                                    <span className={`"text-blue-950"} font-semibold font-notosans text-sm transition-all`}>
+                                        Admin Dashboard
+                                    </span>
+                                </div>
+                                <MoveRight size={15} className={`text-blue-100`} />
+                            </a>
+                        </>
+                    )}
+
                     {navlinks.slice(0, 3).map((item) => (
                         <a key={item.id} href={item.path} className="flex justify-between items-center gap-2 text-blue-950/50 transition-all mb-2 last:mb-0">
                             <div className="flex items-center gap-2 text-blue-950/50">

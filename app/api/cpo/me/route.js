@@ -12,7 +12,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
 
     console.log(session.user.role);
-    
+
 
     if (!session) {
       return NextResponse.json(
@@ -21,12 +21,14 @@ export async function GET() {
       );
     }
 
-    // if (session.user.role !== "admin") {
-    //   return NextResponse.json(
-    //     { message: "Forbidden" },
-    //     { status: 403 }
-    //   );
-    // }
+    const allowedRoles = ["admin", "cpo"];
+
+    if (!allowedRoles.includes(session.user.role)) {
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
+      );
+    }
 
     //     if (session.user.role !== "cpo") {
     //   return NextResponse.json(
@@ -38,7 +40,7 @@ export async function GET() {
     const cpo = await CPO.findOne({ user: session.user.id })
       .populate("user", "name email");
 
-      // console.log(cpo);
+    // console.log(cpo);
 
     if (!cpo) {
       return NextResponse.json(
@@ -48,7 +50,7 @@ export async function GET() {
     }
 
     const stations = await Station.find({ cpo: cpo._id }).lean();
-    
+
 
     return NextResponse.json({ cpo, stations }, { status: 200 });
   } catch (error) {
