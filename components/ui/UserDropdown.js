@@ -45,6 +45,7 @@ export default function UserDropdown() {
                         <div className="text-blue-950
                         font-bold text-lg">
                             {session.user.name?.charAt(0)}
+                            {session.user.name?.charAt(1).toUpperCase()}
                         </div>
                     </label>
 

@@ -20,15 +20,15 @@ export default function SideNav() {
     const navlinks = [
         {
             id: 0,
-            path: "/cpo/dashboard",
-            linkname: "Dashboard",
-            icon: LayoutDashboardIcon,
-        },
-        {
-            id: 1,
             path: "/",
             linkname: "Go To Map",
             icon: Map,
+        },
+        {
+            id: 1,
+            path: "/cpo/dashboard",
+            linkname: "Dashboard",
+            icon: LayoutDashboardIcon,
         },
         {
             id: 2,
