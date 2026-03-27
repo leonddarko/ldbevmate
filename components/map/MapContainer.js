@@ -392,7 +392,14 @@ export default function MapView() {
                                     <div className="xs">Connectors • <span className=" font-bold">
                                         {station.connectors.join(", ")}
                                     </span></div>
-                                    <div className="xs">{station.powerKW}kW • <span className=" font-bold">₵{station.pricePerKWh} / kWh</span> </div>
+
+                                    <div className="xs">{station.powerKW}kW
+                                        {station.pricePerKWh > 0 && (
+                                            <>
+                                                • <span className=" font-bold">₵{station.pricePerKWh} / kWh</span>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </Tooltip>
                         )}
@@ -460,8 +467,18 @@ export default function MapView() {
 
                     <div className="mt-2 flex justify-start gap-1 text-sm">
                         <span>{selectedStation.powerKW} kW</span>
+                        {selectedStation.pricePerKWh > 0 && (
+                            <>
+                                <span>•</span>
+                                <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
+                        <span>Outlets Available</span>
                         <span>•</span>
-                        <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
+                        <span className=" font-medium">{selectedStation.outlets}</span>
                     </div>
 
 

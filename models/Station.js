@@ -51,6 +51,10 @@ const stationSchema = new mongoose.Schema(
       type: Number,
     },
 
+    outlets: {
+      type: Number,
+    },
+
     availabilityStatus: {
       type: String,
       enum: ["available", "busy", "offline"],

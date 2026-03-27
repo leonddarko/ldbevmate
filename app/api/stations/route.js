@@ -32,6 +32,7 @@ export async function POST(req) {
       connectors,
       powerKW,
       pricePerKWh,
+      outlets,
       availabilityStatus,
     } = body;
 
@@ -102,6 +103,7 @@ export async function POST(req) {
       connectors,
       powerKW,
       pricePerKWh,
+      outlets,
       availabilityStatus,
     });
 

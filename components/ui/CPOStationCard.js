@@ -40,6 +40,12 @@ export default function CPOStationCard({ Stations }) {
                                 <span> {station.connectors.join(", ")}</span>
                             </p>
 
+                            <p className="text-xs mt-1 text-gray-500">
+                                <span>Outlets </span>
+                                •
+                                <span className=" font-bold"> {station.outlets}</span>
+                            </p>
+
                             {station.availabilityStatus === "available" && (
                                 <div className="text-xs mt-1">
                                     <span className="text-gray-500">

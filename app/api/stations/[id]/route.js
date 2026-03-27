@@ -56,6 +56,7 @@ export async function PUT(req) {
         connectors: body.connectors,
         powerKW: body.powerKW,
         pricePerKWh: body.pricePerKWh,
+        outlets: body.outlets,
         availabilityStatus: body.availabilityStatus,
       },
       { new: true }

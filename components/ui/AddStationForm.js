@@ -35,6 +35,7 @@ export default function AddStationForm({ onSuccess }) {
         connectors: [],
         powerKW: "",
         pricePerKWh: "",
+        outlets: "",
         availabilityStatus: "available",
     });
 
@@ -79,6 +80,7 @@ export default function AddStationForm({ onSuccess }) {
                 pricePerKWh: form.pricePerKWh
                     ? Number(form.pricePerKWh)
                     : undefined,
+                outlets: form.outlets,
                 availabilityStatus: form.availabilityStatus,
             };
 
@@ -190,7 +192,7 @@ export default function AddStationForm({ onSuccess }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
                 {/* Power */}
                 <div>
                     <label className="label text-xs">Power (kW)</label>
@@ -213,6 +215,18 @@ export default function AddStationForm({ onSuccess }) {
                         name="pricePerKWh"
                         className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
                         value={form.pricePerKWh}
+                        onChange={handleChange}
+                    />
+                </div>
+                {/* Outlets */}
+                <div>
+                    <label className="label text-xs">Outlets</label>
+                    <input
+                        type="number"
+                        name="outlets"
+                        min={1}
+                        className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
+                        value={form.outlets}
                         onChange={handleChange}
                     />
                 </div>

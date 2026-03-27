@@ -21,6 +21,7 @@ export default function EditStationPage() {
     connectors: [],
     powerKW: "",
     pricePerKWh: "",
+    outlets: "",
     availabilityStatus: "available",
   });
 
@@ -48,6 +49,7 @@ export default function EditStationPage() {
         connectors: station.connectors || [],
         powerKW: station.powerKW || "",
         pricePerKWh: station.pricePerKWh || "",
+        outlets: station.outlets || "",
         availabilityStatus: station.availabilityStatus || "available",
       });
     };
@@ -210,7 +212,7 @@ export default function EditStationPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {/* Power */}
             <div>
               <label className="label text-xs">Power (kW)</label>
@@ -233,6 +235,18 @@ export default function EditStationPage() {
                 name="pricePerKWh"
                 className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
                 value={form.pricePerKWh}
+                onChange={handleChange}
+              />
+            </div>
+            {/* Outlets */}
+            <div>
+              <label className="label text-xs">Outlets</label>
+              <input
+                type="number"
+                name="outlets"
+                min={1}
+                className="input input-xs input-bordered bg-white/50 border border-none shadow w-full rounded-3xl"
+                value={form.outlets}
                 onChange={handleChange}
               />
             </div>
