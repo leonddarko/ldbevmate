@@ -12,7 +12,7 @@ export default function AddStationModal() {
                 type="button"
                 className="btn btn-sm flex justify-start gap-2 
                 backdrop-blur-xl bg-blue-300/10 border border-blue-100/20 shadow-sm 
-                text-blue-950 rounded-full"
+                text-blue-950 rounded-full z-10"
             >
                 <span>Add Station</span>
                 <Plus size={15} />

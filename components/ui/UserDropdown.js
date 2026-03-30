@@ -42,7 +42,7 @@ export default function UserDropdown() {
                         "
                     >
                         {/* <User size={20} className="text-blue-950" /> */}
-                        <div className="text-blue-950
+                        <div className="text-blue-500
                         font-bold text-lg">
                             {session.user.name?.charAt(0)}
                             {session.user.name?.charAt(1).toUpperCase()}
@@ -68,11 +68,11 @@ export default function UserDropdown() {
                         {/* User Header */}
                         <div className="px-5 py-2 border-b border-white/10">
 
-                            <div className="font-bold text-xl text-blue-950">
+                            <div className="font-bold text-xl text-blue-500">
                                 {session.user.name}
                             </div>
 
-                            <div className="text-xs text-blue-950/60 break-all">
+                            <div className="text-xs text-blue-400/60 break-all">
                                 {session.user.email}
                             </div>
 
@@ -88,7 +88,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-950
+                                    text-blue-500
                                     hover:bg-blue-500/10
                                     transition
                                     "
@@ -108,7 +108,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-950
+                                    text-blue-500
                                     hover:bg-blue-500/10
                                     transition
                                     "
@@ -127,7 +127,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-950
+                                    text-blue-500
                                     hover:bg-blue-500/10
                                     transition
                                     "

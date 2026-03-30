@@ -8,29 +8,16 @@ export default function CpoLayout({ children }) {
       <div className="min-h-screen flex flex-col md:flex-row md:overflow-scroll bg-white/50
        bg-[url(/backgroundimages/ev-charging-station_tp.JPG)] bg-cover bg-center bg-no-repeat bg-fixed">
 
-        <div className="w-full flex-none md:w-72">
+        <div className="w-full flex-none md:w-80 z-10000">
           {/* Sidebar */}
           <SideNav />
         </div>
 
         {/* Content */}
-        <main className="grow overflow-y-auto p-1 md:p-2">
+        <main className="grow md:overflow-y-auto p-1 md:p-2">
           {children}
         </main>
       </div>
-
-      {/* <div className="h-screen flex flex-col md:flex-row md:overflow-scroll bg-[url(/backgroundimages/Abstract-White.png)] bg-cover bg-center bg-no-repeat bg-fixed">
-        <div className="w-full flex-none md:w-72">
-          <SideNavigation
-            UserAccess={useraccess}
-            UserCountry={usercountry}
-          />
-        </div>
-        <div className="flex-grow p-1 overflow-y-auto md:p-2">
-          {children}
-          <DashboardFooter />
-        </div>
-      </div> */}
     </>
 
   );

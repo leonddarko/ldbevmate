@@ -46,6 +46,13 @@ const greenEvIcon = new L.Icon({
     popupAnchor: [0, -36],
 });
 
+const whiteEvIcon = new L.Icon({
+    iconUrl: "/icons/ev-charger-white.svg", // place in /public/icons
+    iconSize: [30, 30],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
+});
+
 
 export function MapController({ centerTrigger, position }) {
     const map = useMap();
@@ -261,7 +268,7 @@ export default function MapView() {
             fitSelectedRoutes: true,
             show: false,
             lineOptions: {
-                styles: [{ color: "#2563eb", weight: 4 }]
+                styles: [{ color: "#2563eb", weight: 5 }]
             }
 
         }).addTo(map);
@@ -359,10 +366,16 @@ export default function MapView() {
 
                 <ZoomWatcher setZoomLevel={setZoomLevel} />
 
-                <TileLayer
+                {/* <TileLayer
                     attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                /> */}
+                
+                <TileLayer
+                    attribution='&copy; OpenStreetMap &copy; CARTO'
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
+
 
                 {stations.map((station) => (
                     <Marker
@@ -373,7 +386,7 @@ export default function MapView() {
                         ]}
                         // icon={evIcon}
                         icon={station.availabilityStatus === "available"
-                            ? greenEvIcon
+                            ? whiteEvIcon
                             : redEvIcon}
                         eventHandlers={{
                             click: () => {
@@ -443,12 +456,12 @@ export default function MapView() {
                 cursor-pointer
     "
             >
-                <LocateFixedIcon className="text-blue-950" size={20} />
+                <LocateFixedIcon className="text-blue-500" size={20} />
             </button>
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/20 border border-white/30 rounded-3xl shadow-2xl p-5 text-blue-950 transition-all duration-300">
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/20 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-500 transition-all duration-300">
                     <h2 className="text-xl font-bold">
                         {selectedStation.name}
                     </h2>
@@ -588,10 +601,10 @@ export default function MapView() {
                 >
 
                     <div className="flex flex-col items-start">
-                        <span className="text-xs text-blue-950 opacity-80">
+                        <span className="text-xs text-blue-200 opacity-80">
                             Destination Charger
                         </span>
-                        <span className="text-xs font-bold text-blue-800">
+                        <span className="text-xs font-bold text-blue-500">
                             {routeInfo.name}
                         </span>
                     </div>
@@ -599,8 +612,8 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs text-blue-950 opacity-80">Distance</span>
-                        <span className="text-xs font-bold text-blue-800">
+                        <span className="text-xs text-blue-200 opacity-80">Distance</span>
+                        <span className="text-xs font-bold text-blue-500">
                             {routeInfo.distance} km
                         </span>
                     </div>
@@ -608,8 +621,8 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs text-blue-950 opacity-80">ETA</span>
-                        <span className="text-xs font-bold text-blue-800">
+                        <span className="text-xs text-blue-200 opacity-80">ETA</span>
+                        <span className="text-xs font-bold text-blue-500">
                             {routeInfo.eta} min
                         </span>
                     </div>
