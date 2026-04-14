@@ -5,9 +5,14 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const MapView = dynamic(() => import("@/components/map/MapContainer"), {
+// const MapView = dynamic(() => import("@/components/map/MapContainer"), {
+//   ssr: false,
+// });
+
+const MapView = dynamic(() => import("@/components/map/MapViewGoogle"), {
   ssr: false,
 });
+
 
 export default function Home() {
   const { data: session, status } = useSession();

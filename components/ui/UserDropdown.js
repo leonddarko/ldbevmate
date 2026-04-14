@@ -31,7 +31,7 @@ export default function UserDropdown() {
                         w-11 h-11
                         rounded-full
                         flex items-center justify-center
-                        bg-white/10
+                        bg-white/90
                         backdrop-blur-md
                         border border-white/20
                         shadow-[0_0_25px_rgba(0,200,255,0.25)]
@@ -56,7 +56,7 @@ export default function UserDropdown() {
                         dropdown-content mt-2
                         right-0
                         w-80
-                        bg-white/10
+                        bg-white/90
                         backdrop-blur-md
                         border border-white/20
                         rounded-3xl
