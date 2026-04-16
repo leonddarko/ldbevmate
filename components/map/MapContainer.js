@@ -89,6 +89,15 @@ export default function MapView() {
 
     const [zoomLevel, setZoomLevel] = useState(13);
 
+
+    const [showReviews, setShowReviews] = useState(false);
+    const [reviews, setReviews] = useState([]);
+    const [reviewLoading, setReviewLoading] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
+
+
+
     const { data: session } = useSession();
 
     // Get user's location/position 
@@ -328,6 +337,51 @@ export default function MapView() {
         return null;
     }
 
+    // Fetch Reviews Function
+    async function fetchReviews(stationId) {
+        setReviewLoading(true);
+        console.log(stationId);
+
+        try {
+            const res = await fetch(`/api/reviews/${stationId}`);
+            const data = await res.json();
+            setReviews(data);
+            console.log(reviews);
+            
+        } catch (error) {
+            console.error("Failed to load reviews", error);
+        } finally {
+            setReviewLoading(false);
+        }
+    }
+    // Fetch Reviews Function
+
+
+    // Submit Review Function
+    async function submitReview() {
+        try {
+            await fetch("/api/reviews", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    station: selectedStation._id,
+                    rating,
+                    comment,
+                }),
+            });
+
+            setComment("");
+            setRating(0);
+            fetchReviews(selectedStation._id);
+
+        } catch (error) {
+            console.error("Failed to submit review", error);
+        }
+    }
+    // Submit Review Function
+
     return (
         <div className="h-screen w-full relative overflow-hidden">
             {/* Loader UI  */}
@@ -370,7 +424,7 @@ export default function MapView() {
                     attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 /> */}
-                
+
                 <TileLayer
                     attribution='&copy; OpenStreetMap &copy; CARTO'
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -494,11 +548,6 @@ export default function MapView() {
                         <span className=" font-medium">{selectedStation.outlets}</span>
                     </div>
 
-
-                    {/* <div className="mt-3 text-sm text-green-700">
-                        {selectedStation.availabilityStatus}
-                    </div> */}
-
                     <div className="mt-2 flex justify-center items-center gap-2">
                         <button
                             onClick={async () => {
@@ -535,8 +584,138 @@ export default function MapView() {
                         </button>
                     </div>
 
+                    <button
+                        onClick={() => {
+                            setShowReviews(true);
+                            fetchReviews(selectedStation._id);
+                        }}
+                        className="
+                            mt-3 w-full
+                            bg-white/20
+                            border border-white/20
+                            text-blue-50
+                            hover:bg-white/30
+                            transition
+                            rounded-full
+                            py-2
+                            cursor-pointer
+                            "
+                    >
+                        Reviews
+                    </button>
+
                 </div>
             )}
+
+
+            {/* Reviews Bottom Sheet Component */}
+
+            {showReviews && (
+                <div className="
+                    fixed inset-0 z-99999
+                    flex items-end justify-center
+                    bg-black/30
+                    backdrop-blur-sm
+                ">
+                    <div className="
+                            w-full max-w-md h-[70vh]
+                            bg-white/80 rounded-t-3xl
+                            shadow
+                            flex flex-col
+                            overflow-hidden
+                    ">
+
+                        {/* Header */}
+                        <div className="p-4 border-b border-gray-400 font-bold text-lg text-center text-blue-700">
+                            Ratings & Comments
+                        </div>
+
+                        {/* Scrollable Reviews */}
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+
+                            {reviewLoading ? (
+                                <p className="text-center text-sm">Loading reviews...</p>
+                            ) : reviews.length === 0 ? (
+                                <p className="text-center text-sm text-gray-700">
+                                    No reviews yet.
+                                </p>
+                            ) : (
+                                reviews.map((review) => (
+                                    <div
+                                        key={review._id}
+                                        className=" bg-gray-200 rounded-2xl p-3"
+                                    >
+                                        <div className="font-medium text-sm">
+                                            {review.user?.name || "Anonymous"}
+                                        </div>
+
+                                        <div className="text-yellow-500 text-md">
+                                            {"★".repeat(review.rating)}
+                                        </div>
+
+                                        <div className="text-sm mt-1 text-gray-700">
+                                            {review.comment}
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        {/* Footer Input */}
+                        <div className="border-t border-gray-300 p-4 space-y-3 bg-white">
+
+                            {/* Rating Stars */}
+                            <div className="flex gap-2 justify-center">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setRating(star)}
+                                        className={`text-2xl ${star <= rating
+                                            ? "text-yellow-500"
+                                            : "text-gray-300"
+                                            }`}
+                                    >
+                                        ★
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Comment Input */}
+                            <textarea
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder="Describe your experience..."
+                                className="
+                                w-full bg-gray-200 rounded-2xl p-3
+                                resize-none outline-none
+                                "
+                                rows={1}
+                            />
+
+                            {/* Actions */}
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowReviews(false)}
+                                    className="w-full py-2 rounded-full bg-gray-200 cursor-pointer"
+                                >
+                                    Close
+                                </button>
+
+                                <button
+                                    onClick={submitReview}
+                                    className="w-full py-2 rounded-full bg-blue-600 text-white cursor-pointer"
+                                >
+                                    Submit
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
+            {/* Reviews Bottom Sheet Component */}
 
 
             {isRoutingLoading && (
