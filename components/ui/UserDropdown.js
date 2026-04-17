@@ -31,7 +31,7 @@ export default function UserDropdown() {
                         w-11 h-11
                         rounded-full
                         flex items-center justify-center
-                        bg-white/20
+                        bg-white
                         backdrop-blur-md
                         border border-white/20
                         shadow-[0_0_25px_rgba(0,200,255,0.25)]
@@ -42,7 +42,7 @@ export default function UserDropdown() {
                         "
                     >
                         {/* <User size={20} className="text-blue-950" /> */}
-                        <div className="text-blue-500
+                        <div className="text-blue-800
                         font-bold text-lg">
                             {session.user.name?.charAt(0)}
                             {session.user.name?.charAt(1).toUpperCase()}
@@ -56,7 +56,7 @@ export default function UserDropdown() {
                         dropdown-content mt-2
                         right-0
                         w-80
-                        bg-white/20
+                        bg-white
                         backdrop-blur-md
                         border border-white/20
                         rounded-3xl
@@ -66,13 +66,13 @@ export default function UserDropdown() {
                     >
 
                         {/* User Header */}
-                        <div className="px-5 py-2 border-b border-white/10">
+                        <div className="px-5 py-2 border-b border-blue-800/10">
 
-                            <div className="font-bold text-xl text-blue-500">
+                            <div className="font-bold text-xl text-blue-800">
                                 {session.user.name}
                             </div>
 
-                            <div className="text-xs text-blue-400/60 break-all">
+                            <div className="text-xs text-blue-800/60 break-all">
                                 {session.user.email}
                             </div>
 
@@ -88,7 +88,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-500
+                                    text-blue-800
                                     hover:bg-blue-500/10
                                     transition
                                     "
@@ -108,7 +108,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-500
+                                    text-blue-800
                                     hover:bg-blue-500/10
                                     transition
                                     "
@@ -127,7 +127,7 @@ export default function UserDropdown() {
                                     flex items-center gap-3
                                     px-4 py-2
                                     rounded-xl
-                                    text-blue-500
+                                    text-blue-800
                                     hover:bg-blue-500/10
                                     transition
                                     "

@@ -15,7 +15,7 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, Route, X, } from "lucide-react";
+import { LocateFixedIcon, Route, Send, X, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
@@ -347,7 +347,7 @@ export default function MapView() {
             const data = await res.json();
             setReviews(data);
             console.log(reviews);
-            
+
         } catch (error) {
             console.error("Failed to load reviews", error);
         } finally {
@@ -500,7 +500,7 @@ export default function MapView() {
                 fixed bottom-6 right-3
                 w-11 h-11
                 rounded-full
-                backdrop-blur-md bg-white/10
+                backdrop-blur-md bg-white
                 shadow-[0_0_20px_rgba(0,200,255,0.4)]
                 border border-white/20
                 flex items-center justify-center
@@ -510,30 +510,65 @@ export default function MapView() {
                 cursor-pointer
     "
             >
-                <LocateFixedIcon className="text-blue-500" size={20} />
+                <LocateFixedIcon className="text-blue-800" size={20} />
             </button>
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/20 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-500 transition-all duration-300">
-                    <h2 className="text-xl font-bold">
-                        {selectedStation.name}
-                    </h2>
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/80 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-900 transition-all duration-300">
+                    <div className=" flex justify-center items-start gap-2">
+                        <h2 className="text-xl font-bold">
+                            {selectedStation.name}
+                        </h2>
 
-                    <div className="mt-2 flex justify-start gap-1 text-sm">
-                        <span>Status</span>
-                        <span>•</span>
-                        <span className=" font-medium text-green-700">{selectedStation.availabilityStatus}</span>
+                        <button
+                            onClick={() => setSelectedStation(null)}
+                            className="btn btn-ghost mt-4 text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer shadow-none border-none"
+                        >
+                            <X size={20} className=" text-red-700" />
+                        </button>
                     </div>
+
+                    {selectedStation.availabilityStatus === "available" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-green-700">Available</span>
+                        </div>
+                    )}
+
+                    {selectedStation.availabilityStatus === "busy" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-gray-600">Busy</span>
+                        </div>
+                    )}
+
+                    {selectedStation.availabilityStatus === "offline" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-red-700">Offline</span>
+                        </div>
+                    )}
 
                     <div className="mt-2 flex justify-start gap-1 text-sm">
                         <span>Connectors</span>
                         <span>•</span>
-                        <span className="font-medium">{selectedStation.connectors.join(", ")}</span>
+                        <span className="font-medium">{selectedStation.connectors.join(", ") || "unknown"}</span>
                     </div>
 
                     <div className="mt-2 flex justify-start gap-1 text-sm">
-                        <span>{selectedStation.powerKW} kW</span>
+                        {selectedStation.outlets > 0 && (
+                            <div className="flex justify-start gap-1 text-sm">
+                                <span>Outlets</span>
+                                <span>•</span>
+                                <span className=" font-medium">{selectedStation.outlets}</span>
+                                <span>•</span>
+                            </div>
+                        )}
+                        <span className=" font-medium">{selectedStation.powerKW} kW</span>
                         {selectedStation.pricePerKWh > 0 && (
                             <>
                                 <span>•</span>
@@ -542,11 +577,7 @@ export default function MapView() {
                         )}
                     </div>
 
-                    <div className="mt-2 flex justify-start gap-1 text-sm">
-                        <span>Outlets Available</span>
-                        <span>•</span>
-                        <span className=" font-medium">{selectedStation.outlets}</span>
-                    </div>
+
 
                     <div className="mt-2 flex justify-center items-center gap-2">
                         <button
@@ -571,38 +602,31 @@ export default function MapView() {
                                 console.log("Creating route:", userLocation, stationLocation);
                                 console.log("Routing:", L.Routing);
                             }}
-                            className="flex justify-center items-center gap-4 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
+                            className="flex justify-center items-center gap-2 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
                         >
                             <Route size={20} />
                             <span>Directions</span>
                         </button>
                         <button
-                            onClick={() => setSelectedStation(null)}
-                            className="mt-4 w-full bg-blue-950 text-white hover:bg-blue-950/90 transition rounded-full py-2 cursor-pointer"
-                        >
-                            Close
-                        </button>
-                    </div>
-
-                    <button
-                        onClick={() => {
-                            setShowReviews(true);
-                            fetchReviews(selectedStation._id);
-                        }}
-                        className="
+                            onClick={() => {
+                                setShowReviews(true);
+                                fetchReviews(selectedStation._id);
+                            }}
+                            className="
                             mt-3 w-full
-                            bg-white/20
+                            bg-white
                             border border-white/20
-                            text-blue-50
-                            hover:bg-white/30
+                            text-blue-700
+                            hover:bg-white/80
                             transition
                             rounded-full
                             py-2
                             cursor-pointer
                             "
-                    >
-                        Reviews
-                    </button>
+                        >
+                            Reviews
+                        </button>
+                    </div>
 
                 </div>
             )}
@@ -614,20 +638,30 @@ export default function MapView() {
                 <div className="
                     fixed inset-0 z-99999
                     flex items-end justify-center
-                    bg-black/30
+                    bg-black/50
                     backdrop-blur-sm
                 ">
                     <div className="
                             w-full max-w-md h-[70vh]
-                            bg-white/80 rounded-t-3xl
+                            bg-white/70 rounded-t-3xl
                             shadow
                             flex flex-col
                             overflow-hidden
                     ">
 
                         {/* Header */}
-                        <div className="p-4 border-b border-gray-400 font-bold text-lg text-center text-blue-700">
-                            Ratings & Comments
+                        <div className="p-4 border-b border-gray-100 text-lg flex justify-center">
+                            <div className="flex flex-col gap-3">
+                                <div className="text-blue-800 font-bold">{selectedStation.name}</div>
+                                <div className="text-sm ">Ratings & Comments</div>
+                            </div>
+
+                            <button
+                                onClick={() => setShowReviews(false)}
+                                className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer shadow-none border-none"
+                            >
+                                <X size={20} className="text-red-700" />
+                            </button>
                         </div>
 
                         {/* Scrollable Reviews */}
@@ -645,7 +679,7 @@ export default function MapView() {
                                         key={review._id}
                                         className=" bg-gray-200 rounded-2xl p-3"
                                     >
-                                        <div className="font-medium text-sm">
+                                        <div className="font-bold text-xs">
                                             {review.user?.name || "Anonymous"}
                                         </div>
 
@@ -653,7 +687,7 @@ export default function MapView() {
                                             {"★".repeat(review.rating)}
                                         </div>
 
-                                        <div className="text-sm mt-1 text-gray-700">
+                                        <div className="text-sm text-black/80">
                                             {review.comment}
                                         </div>
                                     </div>
@@ -670,7 +704,7 @@ export default function MapView() {
                                     <button
                                         key={star}
                                         onClick={() => setRating(star)}
-                                        className={`text-2xl ${star <= rating
+                                        className={`text-3xl ${star <= rating
                                             ? "text-yellow-500"
                                             : "text-gray-300"
                                             }`}
@@ -681,31 +715,24 @@ export default function MapView() {
                             </div>
 
                             {/* Comment Input */}
-                            <textarea
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                placeholder="Describe your experience..."
-                                className="
+
+                            <div className="mt-2 flex justify-center items-center gap-2">
+                                <textarea
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    placeholder="Describe your experience..."
+                                    className="
                                 w-full bg-gray-200 rounded-2xl p-3
                                 resize-none outline-none
                                 "
-                                rows={1}
-                            />
-
-                            {/* Actions */}
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => setShowReviews(false)}
-                                    className="w-full py-2 rounded-full bg-gray-200 cursor-pointer"
-                                >
-                                    Close
-                                </button>
+                                    rows={1}
+                                />
 
                                 <button
                                     onClick={submitReview}
-                                    className="w-full py-2 rounded-full bg-blue-600 text-white cursor-pointer"
+                                    className="btn btn-sm rounded-full bg-blue-600 cursor-pointer"
                                 >
-                                    Submit
+                                    <Send size={20} className="text-white " />
                                 </button>
                             </div>
 
@@ -767,7 +794,7 @@ export default function MapView() {
                     className="
                     fixed bottom-1/6 left-1/2 -translate-x-1/2
                     backdrop-blur-md
-                    bg-white/20
+                    bg-white
                     border border-white/30
                     shadow-[0_8px_40px_rgba(0,0,0,0.25)]
                     rounded-2xl
@@ -780,10 +807,10 @@ export default function MapView() {
                 >
 
                     <div className="flex flex-col items-start">
-                        <span className="text-xs text-blue-200 opacity-80">
+                        <span className="text-xs text-gray-400 opacity-80">
                             Destination Charger
                         </span>
-                        <span className="text-xs font-bold text-blue-500">
+                        <span className="text-xs font-bold text-blue-800">
                             {routeInfo.name}
                         </span>
                     </div>
@@ -791,8 +818,8 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs text-blue-200 opacity-80">Distance</span>
-                        <span className="text-xs font-bold text-blue-500">
+                        <span className="text-xs text-gray-400 opacity-80">Distance</span>
+                        <span className="text-xs font-bold text-blue-800">
                             {routeInfo.distance} km
                         </span>
                     </div>
@@ -800,8 +827,8 @@ export default function MapView() {
                     {/* <div className="w-px h-8 bg-white/40"></div> */}
 
                     <div className="flex flex-col items-start text-center">
-                        <span className="text-xs text-blue-200 opacity-80">ETA</span>
-                        <span className="text-xs font-bold text-blue-500">
+                        <span className="text-xs text-gray-400 opacity-80">ETA</span>
+                        <span className="text-xs font-bold text-blue-800">
                             {routeInfo.eta} min
                         </span>
                     </div>
