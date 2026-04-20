@@ -14,7 +14,6 @@ export async function GET(req, { params }) {
         const { stationid } = await params;
 
         console.log(stationid);
-        console.log("params object:", params);
         
 
         const reviews = await Review.find({

@@ -15,7 +15,7 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, Route, Send, X, } from "lucide-react";
+import { LocateFixedIcon, Route, Send, Trash2, X, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
@@ -382,6 +382,26 @@ export default function MapView() {
     }
     // Submit Review Function
 
+
+    // Delete Review Function
+    async function deleteReview(reviewId) {
+        if (!confirm("Delete your review ?")) return;
+
+        try {
+            await fetch(`/api/review/${reviewId}`, {
+                method: "DELETE",
+            });
+
+            // Refresh reviews
+            fetchReviews(selectedStation._id);
+
+        } catch (error) {
+            console.error("Failed to delete review", error);
+        }
+    }
+    // Delete Review Function
+
+
     return (
         <div className="h-screen w-full relative overflow-hidden">
             {/* Loader UI  */}
@@ -677,19 +697,40 @@ export default function MapView() {
                                 reviews.map((review) => (
                                     <div
                                         key={review._id}
-                                        className=" bg-gray-200 rounded-2xl p-3"
+                                        className=" bg-gray-200 rounded-2xl p-3 flex justify-between items-center gap-3"
                                     >
-                                        <div className="font-bold text-xs">
-                                            {review.user?.name || "Anonymous"}
+                                        <div className="flex-1">
+                                            <div className="font-bold text-xs">
+                                                {review.user?.name || "Anonymous"}
+                                            </div>
+
+                                            <div className="text-yellow-500 text-md">
+                                                {"★".repeat(review.rating)}
+                                            </div>
+
+                                            <div className="text-sm text-black/80">
+                                                {review.comment}
+                                            </div>
                                         </div>
 
-                                        <div className="text-yellow-500 text-md">
-                                            {"★".repeat(review.rating)}
-                                        </div>
-
-                                        <div className="text-sm text-black/80">
-                                            {review.comment}
-                                        </div>
+                                        {/* Show only if owner */}
+                                        {session?.user?.id === review.user?._id && (
+                                            <button
+                                                onClick={() => deleteReview(review._id)}
+                                                className="
+                                                    text-xs
+                                                    text-red-500
+                                                    hover:text-red-700
+                                                    transition
+                                                    cursor-pointer
+                                                    p-2
+                                                    hover:bg-slate-300
+                                                    rounded-full
+                                                    "
+                                            >
+                                                <Trash2 size={15} className=" text-red-800" />
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             )}
