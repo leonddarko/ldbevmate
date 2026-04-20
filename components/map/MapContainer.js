@@ -548,11 +548,10 @@ export default function MapView() {
                         </button>
                     </div>
 
-                    <div className="text-xs text-gray-500 leading-5">
+                    <div className="text-sm text-gray-500 leading-5">
                         <span className=" font-medium text-black" >
                             ★ {selectedStation.averageRating}
-                        </span>
-                        ({selectedStation.reviewCount})
+                        </span> ({selectedStation.reviewCount})
                     </div>
 
                     {selectedStation.availabilityStatus === "available" && (
