@@ -464,7 +464,6 @@ export default function MapView() {
                             : redEvIcon}
                         eventHandlers={{
                             click: () => {
-                                // isRouting && cancelRoute()
                                 setSelectedStation(station)
                             }
                         }}
@@ -547,6 +546,13 @@ export default function MapView() {
                         >
                             <X size={20} className=" text-red-700" />
                         </button>
+                    </div>
+
+                    <div className="text-xs text-gray-500 leading-5">
+                        <span className=" font-medium text-black" >
+                            ★ {selectedStation.averageRating}
+                        </span>
+                        ({selectedStation.reviewCount})
                     </div>
 
                     {selectedStation.availabilityStatus === "available" && (
@@ -673,7 +679,10 @@ export default function MapView() {
                         <div className="p-4 border-b border-gray-100 text-lg flex justify-center">
                             <div className="flex flex-col gap-3">
                                 <div className="text-blue-800 font-bold">{selectedStation.name}</div>
-                                <div className="text-sm ">Ratings & Comments</div>
+                                <div className="text-sm leading-2">Ratings & Comments</div>
+                                <div className="text-xs text-gray-500 leading-2">
+                                    ★ <span className=" font-medium text-black" >{selectedStation.averageRating}</span>  ({selectedStation.reviewCount})
+                                </div>
                             </div>
 
                             <button
@@ -724,7 +733,7 @@ export default function MapView() {
                                                     transition
                                                     cursor-pointer
                                                     p-2
-                                                    hover:bg-slate-300
+                                                    hover:bg-gray-300
                                                     rounded-full
                                                     "
                                             >
