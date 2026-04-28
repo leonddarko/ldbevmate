@@ -549,8 +549,14 @@ export default function MapView() {
                     </div>
 
                     <div className="text-sm text-gray-500 leading-5">
-                        <span className=" font-medium text-black" >
-                            ★ {selectedStation.averageRating}
+                        {/* <span className=" font-medium text-black" >
+                            ★ {selectedStation.averageRating.toFixed(1)}
+                        </span> ({selectedStation.reviewCount}) */}
+
+                        ★ <span className="font-medium text-black">
+                            {selectedStation.reviewCount > 0
+                                ? selectedStation.averageRating.toFixed(1)
+                                : "No ratings"}
                         </span> ({selectedStation.reviewCount})
                     </div>
 
@@ -680,7 +686,11 @@ export default function MapView() {
                                 <div className="text-blue-800 font-bold">{selectedStation.name}</div>
                                 <div className="text-sm leading-2">Ratings & Comments</div>
                                 <div className="text-xs text-gray-500 leading-2">
-                                    ★ <span className=" font-medium text-black" >{selectedStation.averageRating}</span>  ({selectedStation.reviewCount})
+                                    ★ <span className="font-medium text-black">
+                                        {selectedStation.reviewCount > 0
+                                            ? selectedStation.averageRating.toFixed(1)
+                                            : "No ratings"}
+                                    </span> ({selectedStation.reviewCount})
                                 </div>
                             </div>
 
