@@ -7,7 +7,7 @@ export async function GET() {
     await connectDB();
 
     const cpos = await CPO.find()
-      .populate("user", "name email")
+      .populate("user", "name email role")
       .sort({ createdAt: -1 });
 
     return NextResponse.json(cpos);

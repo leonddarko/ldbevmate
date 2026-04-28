@@ -35,23 +35,24 @@ export default function AdminUsersPage() {
       </Link>
       {/* <Dot size={30} className=" text-blue-950 mb-4" /> */}
 
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        {users.map(user => (
-          <div key={user._id} className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200 min-w-xs">
-            <p className=" text-blue-950 font-medium">{user.name}</p>
-            <p className="text-sm opacity-70">{user.email}</p>
-            {user.role === "user" && (<>
-              <p className="text-xs font-bold text-blue-950">User</p>
-            </>)}
-            {user.role === "cpo" && (<>
-              <p className="text-xs font-bold text-blue-950">CPO</p>
-            </>)}
-            {user.role === "admin" && (<>
-              <p className="text-xs font-bold text-blue-950">Admin</p>
-            </>)}
-          </div>
-        ))}
+      <div className=" h-3/3 rounded-3xl overflow-y-auto p-4 mt-4 shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          {users.map(user => (
+            <div key={user._id} className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200 min-w-xs">
+              <p className=" text-blue-950 font-medium">{user.name}</p>
+              <p className="text-sm opacity-70">{user.email}</p>
+              {user.role === "user" && (<>
+                <p className="text-xs font-bold text-blue-950">User</p>
+              </>)}
+              {user.role === "cpo" && (<>
+                <p className="text-xs font-bold text-blue-950">CPO</p>
+              </>)}
+              {user.role === "admin" && (<>
+                <p className="text-xs font-bold text-blue-950">Admin</p>
+              </>)}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

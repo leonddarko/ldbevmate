@@ -71,7 +71,7 @@ export default function LoginPage() {
           w-full max-w-sm
           bg-white/10
           backdrop-blur-2xl
-          border border-white/40
+          border border-white
           rounded-3xl
           py-6 px-8
           shadow-2xl

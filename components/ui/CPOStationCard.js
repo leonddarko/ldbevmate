@@ -16,7 +16,7 @@ export default function CPOStationCard({ Stations }) {
                         key={station._id}
                         className="
                         backdrop-blur-2xl
-                        bg-white/40
+                        bg-white/80
                         border border-white/40
                         rounded-2xl
                         p-5

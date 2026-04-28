@@ -60,7 +60,7 @@ export async function POST(req) {
 
             await User.findByIdAndUpdate(
                 userId,
-                { role: "cpo" },
+                { role: "user" },
                 { session: sessionDB }
             );
 
@@ -88,5 +88,4 @@ export async function POST(req) {
             { status: 500 }
         );
     }
-
 }

@@ -11,7 +11,7 @@ export default function AddStationModal() {
                 onClick={() => document.getElementById('addstation_modal').showModal()}
                 type="button"
                 className="btn btn-sm flex justify-start gap-2 
-                backdrop-blur-xl bg-blue-300/10 border border-blue-100/20 shadow-sm 
+                backdrop-blur-xl bg-white-300/80 border border-blue-100/20 shadow-sm 
                 text-blue-950 rounded-full z-10"
             >
                 <span>Add Station</span>
@@ -20,7 +20,7 @@ export default function AddStationModal() {
 
 
             <dialog id="addstation_modal" className="modal">
-                <div className="modal-box backdrop-blur-2xl bg-blue-50/30 border border-blue-100/40 rounded-3xl shadow-2xl p-6 max-w-lg">
+                <div className="modal-box backdrop-blur-2xl bg-white/80 border border-blue-100/40 rounded-3xl shadow-2xl p-6 max-w-lg">
                     <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
                         <button className="btn-sm btn-circle btn-ghost absolute right-2 top-2">

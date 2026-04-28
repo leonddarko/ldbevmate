@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
-import { User, LayoutDashboard, LogOut, DoorOpen, ShieldUser } from "lucide-react"
+import { User, LayoutDashboard, LogOut, DoorOpen, ShieldUser, EvCharger } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect } from "react"
@@ -66,16 +66,28 @@ export default function UserDropdown() {
                     >
 
                         {/* User Header */}
-                        <div className="px-5 py-2 border-b border-blue-800/10">
+                        <div className=" flex justify-between items-center px-5 py-2 border-b border-blue-800/10">
+                            <div>
+                                <div className="font-bold text-xl text-blue-800">
+                                    {session.user.name}
+                                </div>
 
-                            <div className="font-bold text-xl text-blue-800">
-                                {session.user.name}
+                                <div className="text-xs text-blue-800/60 break-all">
+                                    {session.user.email}
+                                </div>
                             </div>
 
-                            <div className="text-xs text-blue-800/60 break-all">
-                                {session.user.email}
-                            </div>
+                            {session.user.role === "cpo" && (
+                                <EvCharger size={20} className="text-green-900" />
+                            )}
 
+                            {session.user.role === "user" && (
+                                <User size={20} className="text-green-900" />
+                            )}
+
+                            {session.user.role === "admin" && (
+                                <ShieldUser size={20} className="text-green-900" />
+                            )}
                         </div>
 
                         {/* Menu */}
