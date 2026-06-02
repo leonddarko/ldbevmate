@@ -111,7 +111,7 @@ export default function EditStationPage() {
   return (
     <div className="py-6 md:pt-12 px-4 md:px-10 h-screen rounded-3xl bg-blue-50/50 backdrop-blur-sm border border-white/90 overflow-scroll">
 
-      <div className="mb-8">
+      <div className="mb-8 ">
         {/* <span className="loading loading-spinner loading-lg text-blue-900"></span> */}
 
         <h1 className="text-3xl md:text-4xl font-bold text-blue-950 tracking-tight">
@@ -123,7 +123,7 @@ export default function EditStationPage() {
 
       <div className="backdrop-blur-2xl bg-white/50 border border-blue-100/40 rounded-3xl p-6 ">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-blue-950">
           {/* Name */}
           <div>
             <label className="label text-xs">Name</label>

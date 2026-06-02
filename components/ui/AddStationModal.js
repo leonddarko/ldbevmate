@@ -11,7 +11,7 @@ export default function AddStationModal() {
                 onClick={() => document.getElementById('addstation_modal').showModal()}
                 type="button"
                 className="btn btn-sm flex justify-start gap-2 
-                backdrop-blur-xl bg-white-300/80 border border-blue-100/20 shadow-sm 
+                backdrop-blur-xl bg-white/80 border border-blue-100/20 shadow-sm 
                 text-blue-950 rounded-full z-10"
             >
                 <span>Add Station</span>

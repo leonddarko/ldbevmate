@@ -15,10 +15,13 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, Route, Send, Trash2, X, } from "lucide-react";
+import { LocateFixedIcon, Route, Send, SquareArrowOutUpRight, Trash2, X, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
+import BecomeRealtorModal from "../ui/BecomeRealtorModal";
+
+import { useRouter } from "next/navigation";
 
 
 // Fix default marker icon issue in Next.js
@@ -99,6 +102,7 @@ export default function MapView() {
 
 
     const { data: session } = useSession();
+    const router = useRouter();
 
     // Get user's location/position 
     const lastPositionRef = useRef(null);
@@ -504,7 +508,10 @@ export default function MapView() {
             </MapContainer>
 
             {session?.user?.role === "user" && (
-                <BecomeOperatorModal />
+                <>
+                    <BecomeOperatorModal />
+                    {/* <BecomeRealtorModal /> */}
+                </>
             )}
 
             <UserDropdown />
@@ -535,14 +542,14 @@ export default function MapView() {
             {/* Liquid Glass Card */}
             {selectedStation && (
                 <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/80 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-900 transition-all duration-300">
-                    <div className=" flex justify-center items-start gap-2">
+                    <div className=" flex justify-between items-center gap-2">
                         <h2 className="text-xl font-bold">
                             {selectedStation.name}
                         </h2>
 
                         <button
                             onClick={() => setSelectedStation(null)}
-                            className="btn btn-ghost mt-4 text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer shadow-none border-none"
+                            className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer border-none hover:bg-white hover:shadow-sm"
                         >
                             <X size={20} className=" text-red-700" />
                         </button>
@@ -611,9 +618,9 @@ export default function MapView() {
 
 
                     <div className="mt-2 flex justify-center items-center gap-2">
+                        {/* Directions Button */}
                         <button
                             onClick={async () => {
-
                                 if (!userPosition) return;
 
                                 setIsRoutingLoading(true);
@@ -633,18 +640,21 @@ export default function MapView() {
                                 console.log("Creating route:", userLocation, stationLocation);
                                 console.log("Routing:", L.Routing);
                             }}
-                            className="flex justify-center items-center gap-2 mt-4 w-full bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full py-2 cursor-pointer"
+                            className="flex justify-center items-center gap-2 mt-4 bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full p-2 cursor-pointer w-full"
                         >
                             <Route size={20} />
                             <span>Directions</span>
                         </button>
+                        {/* Directions Button */}
+
+                        {/* Details Button */}
                         <button
                             onClick={() => {
-                                setShowReviews(true);
-                                fetchReviews(selectedStation._id);
+                                router.push(`/station/${selectedStation._id}/details`);
                             }}
                             className="
-                            mt-3 w-full
+                            flex justify-center items-center gap-2
+                            mt-3 w-1/2
                             bg-white
                             border border-white/20
                             text-blue-700
@@ -653,10 +663,37 @@ export default function MapView() {
                             rounded-full
                             py-2
                             cursor-pointer
+                            hover:shadow-sm
+                            "
+                        >
+                            {/* <SquareArrowOutUpRight size={20} /> */}
+                            <span>Details</span>
+                        </button>
+                        {/* Details Button */}
+
+                        {/* Reviews Button */}
+                        <button
+                            onClick={() => {
+                                setShowReviews(true);
+                                fetchReviews(selectedStation._id);
+                            }}
+                            className="
+                            mt-3 w-1/2
+                            bg-white
+                            border border-white/20
+                            text-blue-700
+                            hover:bg-white/80
+                            transition
+                            rounded-full
+                            py-2
+                            cursor-pointer
+                            hover:shadow-sm
                             "
                         >
                             Reviews
                         </button>
+                        {/* Reviews Button */}
+
                     </div>
 
                 </div>

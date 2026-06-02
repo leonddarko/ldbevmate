@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
-import { User, LayoutDashboard, LogOut, DoorOpen, ShieldUser, EvCharger } from "lucide-react"
+import { User, LayoutDashboard, LogOut, DoorOpen, ShieldUser, EvCharger, Building2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useEffect } from "react"
@@ -77,6 +77,10 @@ export default function UserDropdown() {
                                 </div>
                             </div>
 
+                            {session.user.role === "realtor" && (
+                                <Building2 size={20} className="text-green-900" />
+                            )}
+
                             {session.user.role === "cpo" && (
                                 <EvCharger size={20} className="text-green-900" />
                             )}
@@ -92,8 +96,45 @@ export default function UserDropdown() {
 
                         {/* Menu */}
                         <div className="p-2 space-y-1">
-                            {session.user.role === "admin" && (
+                            {(session.user.role === "admin" || session.user.role === "cpo") && (
+                                <Link
+                                    href="/cpo/dashboard"
+                                    className="
+                                    flex items-center gap-3
+                                    px-4 py-2
+                                    rounded-xl
+                                    text-blue-800
+                                    hover:bg-blue-500/10
+                                    transition
+                                    "
+                                >
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-medium">
+                                        CPO Dashboard
+                                    </span>
+                                </Link>
+                            )}
 
+                             {session.user.role === "realtor" && (
+                                <Link
+                                    href="/realtor/dashboard"
+                                    className="
+                                    flex items-center gap-3
+                                    px-4 py-2
+                                    rounded-xl
+                                    text-blue-800
+                                    hover:bg-blue-500/10
+                                    transition
+                                    "
+                                >
+                                    <LayoutDashboard size={18} />
+                                    <span className="font-medium">
+                                        Realtor Dashboard
+                                    </span>
+                                </Link>
+                            )}
+
+                            {session.user.role === "admin" && (
                                 <Link
                                     href="/admin"
                                     className="
@@ -110,10 +151,9 @@ export default function UserDropdown() {
                                         Admin Dashboard
                                     </span>
                                 </Link>
-
                             )}
 
-                            {session.user.role === "cpo" && (
+                            {/* {session.user.role === "admin" && (
                                 <Link
                                     href="/cpo/dashboard"
                                     className="
@@ -130,32 +170,12 @@ export default function UserDropdown() {
                                         CPO Dashboard
                                     </span>
                                 </Link>
-                            )}
-
-                            {session.user.role === "admin" && (
-                                <Link
-                                    href="/cpo/dashboard"
-                                    className="
-                                    flex items-center gap-3
-                                    px-4 py-2
-                                    rounded-xl
-                                    text-blue-800
-                                    hover:bg-blue-500/10
-                                    transition
-                                    "
-                                >
-                                    <LayoutDashboard size={18} />
-                                    <span className="font-medium">
-                                        CPO Dashboard
-                                    </span>
-                                </Link>
-                            )}
+                            )} */}
 
                         </div>
 
                         {/* Footer */}
                         <div className="border-t border-white/10 p-2">
-
                             <button
                                 onClick={() => signOut({ callbackUrl: "/sign-in" })}
                                 className="
@@ -174,7 +194,6 @@ export default function UserDropdown() {
                                     Sign Out
                                 </span>
                             </button>
-
                         </div>
 
                     </div>

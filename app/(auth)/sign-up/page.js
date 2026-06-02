@@ -31,11 +31,13 @@ export default function SignupPage() {
         const res = await fetch("/api/auth/register", {
             method: "POST",
             body: JSON.stringify(form),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const data = await res.json();
         console.log(data);
-        
 
         if (!res.ok) {
             setError(data.message);
@@ -47,9 +49,11 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black
+        <div
+            className="min-h-screen flex items-center justify-center bg-black
         bg-[url(/backgroundimages/ev-charging-station.jpg)] bg-cover bg-center bg-no-repeat bg-fixed
-        px-6">
+        px-6"
+        >
             <div
                 className="
           w-full max-w-sm
@@ -64,15 +68,9 @@ export default function SignupPage() {
           transition
         "
             >
-                <h2 className="text-3xl font-bold text-center mb-6">
-                    Create Account
-                </h2>
+                <h2 className="text-3xl font-bold text-center mb-6">Create Account</h2>
 
-                {error && (
-                    <div className="alert alert-error mb-4 text-sm">
-                        {error}
-                    </div>
-                )}
+                {error && <div className="alert alert-error mb-4 text-sm">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="space-y-2">
                     <input
@@ -116,12 +114,14 @@ export default function SignupPage() {
                 text-white
             "
                     >
-                        {loading ?
+                        {loading ? (
                             <span className="flex justify-center items-center gap-2 font-semibold">
                                 <Plug size={20} className=" animate-ping" />
                                 Creating...
                             </span>
-                            : "Sign Up"}
+                        ) : (
+                            "Sign Up"
+                        )}
                     </button>
                 </form>
 

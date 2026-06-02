@@ -6,7 +6,7 @@ import User from "@/models/User";
 
 // const handler = NextAuth({
 
-  export const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -16,9 +16,16 @@ import User from "@/models/User";
       },
 
       async authorize(credentials) {
+
+        console.log("EMAIL:", credentials.email);
+
         await connectDB();
 
+        console.log("CONNECTED");
+
         const user = await User.findOne({ email: credentials.email });
+
+        console.log("USER:", user);
 
         if (!user) {
           throw new Error("No user found");
@@ -29,6 +36,8 @@ import User from "@/models/User";
           credentials.password,
           user.password
         );
+
+        console.log("PASSWORD VALID:", isValid);
 
         if (!isValid) {
           throw new Error("Invalid password");

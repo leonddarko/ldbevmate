@@ -47,9 +47,9 @@ export default function AdminCPOPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col justify-start items-center py-8 px-6 md:py-24 md:px-12 overflow-y-auto">
+    <div className="h-screen flex flex-col justify-start items-center py-8 px-6 md:py-24 md:px-12 bg-[url(/backgroundimages/ev-charging-station_tp.JPG)] bg-cover bg-center bg-no-repeat bg-fixed overflow-y-auto">
       <Building size={30} className=" text-blue-950" />
-      <h1 className="text-xl font-bold my-2">Manage CPOs</h1>
+      <h1 className="text-xl font-bold my-2 text-blue-950">Manage CPOs</h1>
 
       <Link href="/admin">
         <button
@@ -67,7 +67,7 @@ export default function AdminCPOPage() {
       </Link>
       {/* <Dot size={30} className=" text-blue-950 mb-4" /> */}
 
-      <div className=" h-3/3 rounded-3xl overflow-y-auto p-4 mt-4 shadow">
+      <div className=" h-3/3 rounded-3xl overflow-y-auto p-4 mt-4 shadow bg-white">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {cpos.map(cpo => (

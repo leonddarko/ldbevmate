@@ -28,9 +28,9 @@ export default function AdminDashboard() {
                     <Link href="/admin/users">
                         <div className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200">
                             <div className="flex justify-between items-center gap-2">
-                                <div>
+                                <div className=" text-blue-950">
                                     <div className="flex justify-start gap-2">
-                                        <Users size={15} className=" text-blue-950" />
+                                        <Users size={15} />
                                         <h2 className="text-sm">Users</h2>
                                     </div>
                                     <p className="font-semibold" >Manage platform users</p>
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
                     <Link href="/admin/cpos">
                         <div className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200">
                             <div className="flex justify-between items-center gap-2">
-                                <div>
+                                <div className=" text-blue-950">
                                     <div className="flex justify-start gap-2">
                                         <Building size={15} className=" text-blue-950" />
                                         <h2 className="text-sm">CPOs</h2>
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
                     <Link href="/admin/stations">
                         <div className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200">
                             <div className="flex justify-between items-center gap-2">
-                                <div>
+                                <div className=" text-blue-950">
                                     <div className="flex justify-start gap-2">
                                         <EvCharger size={15} className=" text-blue-950" />
                                         <h2 className="text-xs ">Stations</h2>
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
                     <Link href="/">
                         <div className="card bg-blue-100/20 backdrop-blur-md p-4 rounded-3xl shadow-sm hover:shadow-[0_0_20px_rgba(0,200,255,0.4)] cursor-pointer transition-all duration-200">
                             <div className="flex justify-between items-center gap-2">
-                                <div>
+                                <div className=" text-blue-950">
                                     <div className="flex justify-start gap-2">
                                         <Map size={15} className=" text-blue-950" />
                                         <h2 className="text-xs ">Map</h2>

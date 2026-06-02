@@ -57,7 +57,7 @@ export default function BecomeOperatorModal() {
                             backdrop-blur-2xl border border-blue-100/40
                             shadow-[0_0_20px_rgba(0,200,255,0.25)]
                             flex items-center justify-center
-                            text-blue/950
+                            text-blue-900
         "
             >
                 <div>
@@ -69,7 +69,7 @@ export default function BecomeOperatorModal() {
             {/* Modal */}
             <dialog id="become_operator_modal" className="modal">
                 <div className="modal-box backdrop-blur-2xl 
-                bg-white/80 border border-blue-100/40 rounded-3xl p-6 max-w-md">
+                bg-white/80 border border-blue-100/40 rounded-3xl p-6 max-w-md text-blue-900">
                     {/* Close */}
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">

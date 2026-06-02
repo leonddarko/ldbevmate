@@ -103,7 +103,7 @@ export default function AddStationForm({ onSuccess }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-blue-950">
 
             {/* Name */}
             <div>
@@ -182,7 +182,7 @@ export default function AddStationForm({ onSuccess }) {
                         <label key={connector} className="cursor-pointer label gap-2">
                             <input
                                 type="checkbox"
-                                className="checkbox checkbox-xs bg-white/80"
+                                className="checkbox checkbox-xs bg-white/80 checkbox-neutral border-0"
                                 checked={form.connectors.includes(connector)}
                                 onChange={() => handleConnectorChange(connector)}
                             />
