@@ -1,5 +1,6 @@
 import connectDB from "@/lib/db";
 import Station from "@/models/Station";
+import CPO from "@/models/CPO";
 import {
     Star,
     Zap,
