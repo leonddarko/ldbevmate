@@ -712,7 +712,7 @@ export default function MapView() {
                     <div className="
                             w-full max-w-md h-[70vh]
                             bg-white/70 rounded-t-3xl
-                            shadow
+                            shadow-sm
                             flex flex-col
                             overflow-hidden
                     ">
@@ -721,7 +721,7 @@ export default function MapView() {
                         <div className="p-4 border-b border-gray-100 text-lg flex justify-center">
                             <div className="flex flex-col gap-3">
                                 <div className="text-blue-800 font-bold">{selectedStation.name}</div>
-                                <div className="text-sm leading-2">Ratings & Comments</div>
+                                <div className="text-sm leading-2 text-gray-500">Ratings & Comments</div>
                                 <div className="text-xs text-gray-500 leading-2">
                                     ★ <span className="font-medium text-black">
                                         {selectedStation.reviewCount > 0
@@ -755,7 +755,7 @@ export default function MapView() {
                                         className=" bg-gray-200 rounded-2xl p-3 flex justify-between items-center gap-3"
                                     >
                                         <div className="flex-1">
-                                            <div className="font-bold text-xs">
+                                            <div className="font-bold text-xs text-black">
                                                 {review.user?.name || "Anonymous"}
                                             </div>
 
@@ -826,7 +826,7 @@ export default function MapView() {
 
                                 <button
                                     onClick={submitReview}
-                                    className="btn btn-sm rounded-full bg-blue-600 cursor-pointer"
+                                    className="btn btn-sm rounded-full bg-blue-600 cursor-pointer border-none"
                                 >
                                     <Send size={20} className="text-white " />
                                 </button>
