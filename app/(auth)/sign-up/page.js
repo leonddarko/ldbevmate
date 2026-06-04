@@ -57,9 +57,9 @@ export default function SignupPage() {
             <div
                 className="
           w-full max-w-sm
-          bg-white/10
+          bg-white/40
           backdrop-blur-2xl
-          border border-white
+          border border-white/30
           rounded-4xl
           py-6 px-8
           shadow-2xl
