@@ -251,14 +251,73 @@ export default function MapView() {
     // Auto - Center When Everything Is Ready
 
 
+    // Routing Function
     const routingRef = useRef(null);
     const mapRef = useRef(null);
 
-    // Routing Function
-    function createRoute(userLocation, stationLocation) {
+    const destinationRef = useRef(null);
+    const isRoutingRef = useRef(false);
 
+    // function createRoute(userLocation, stationLocation) {
+
+    //     const map = mapRef.current;
+    //     if (!map) return;
+
+    //     if (routingRef.current) {
+    //         map.removeControl(routingRef.current);
+    //     }
+
+    //     routingRef.current = L.Routing.control({
+    //         router: L.Routing.osrmv1({
+    //             serviceUrl: "https://router.project-osrm.org/route/v1"
+    //         }),
+
+    //         waypoints: [
+    //             L.latLng(userLocation.lat, userLocation.lng),
+    //             L.latLng(stationLocation.lat, stationLocation.lng)
+    //         ],
+
+    //         createMarker: () => null,
+    //         routeWhileDragging: false,
+    //         addWaypoints: false,
+    //         draggableWaypoints: false,
+    //         fitSelectedRoutes: true,
+    //         show: false,
+    //         lineOptions: {
+    //             styles: [{ color: "#2563eb", weight: 5 }]
+    //         }
+
+    //     }).addTo(map);
+
+    //     setIsRouting(true);
+
+    //     // 📍 Capture route details
+    //     routingRef.current.on("routesfound", function (e) {
+
+    //         setIsRoutingLoading(false);
+
+    //         const route = e.routes[0];
+
+    //         const distance = route.summary.totalDistance / 1000;
+    //         const time = route.summary.totalTime / 60;
+
+    //         setRouteInfo({
+    //             name: selectedStation.name,
+    //             distance: distance.toFixed(2),
+    //             eta: time.toFixed(0)
+    //         });
+
+    //         // zoom map to show entire route
+    //         map.fitBounds(L.latLngBounds(route.coordinates));
+    //     });
+    // }
+
+    function createRoute(userLocation, stationLocation) {
         const map = mapRef.current;
         if (!map) return;
+
+        destinationRef.current = stationLocation;
+        isRoutingRef.current = true;
 
         if (routingRef.current) {
             map.removeControl(routingRef.current);
@@ -280,6 +339,7 @@ export default function MapView() {
             draggableWaypoints: false,
             fitSelectedRoutes: true,
             show: false,
+
             lineOptions: {
                 styles: [{ color: "#2563eb", weight: 5 }]
             }
@@ -288,9 +348,7 @@ export default function MapView() {
 
         setIsRouting(true);
 
-        // 📍 Capture route details
-        routingRef.current.on("routesfound", function (e) {
-
+        routingRef.current.on("routesfound", (e) => {
             setIsRoutingLoading(false);
 
             const route = e.routes[0];
@@ -299,19 +357,44 @@ export default function MapView() {
             const time = route.summary.totalTime / 60;
 
             setRouteInfo({
-                name: selectedStation.name,
+                name: selectedStation?.name,
                 distance: distance.toFixed(2),
                 eta: time.toFixed(0)
             });
 
-            // console.log(`Distance: ${distance.toFixed(2)} km`);
-            // console.log(`ETA: ${time.toFixed(0)} minutes`);
-
-            // zoom map to show entire route
             map.fitBounds(L.latLngBounds(route.coordinates));
         });
     }
+
+    const lastRouteUpdateRef = useRef(null);
+
+    useEffect(() => {
+        if (!isRoutingRef.current) return;
+        if (!destinationRef.current) return;
+        if (!userPosition) return;
+
+        const [lat, lng] = userPosition;
+
+        if (lastRouteUpdateRef.current) {
+            const d = getDistanceMeters(
+                lastRouteUpdateRef.current.lat,
+                lastRouteUpdateRef.current.lng,
+                lat,
+                lng
+            );
+
+            if (d < 30) return; // only update if moved > 30m
+        }
+
+        lastRouteUpdateRef.current = { lat, lng };
+
+        createRoute({ lat, lng }, destinationRef.current);
+
+    }, [userPosition]);
+
     // Routing Function
+
+
 
     // Cancel Routing Function
     function cancelRoute() {
@@ -718,7 +801,7 @@ export default function MapView() {
                     ">
 
                         {/* Header */}
-                        <div className="p-4 border-b border-gray-100 text-lg flex justify-center">
+                        <div className="p-4 border-b border-gray-100 text-lg flex justify-between items-center">
                             <div className="flex flex-col gap-3">
                                 <div className="text-blue-800 font-bold">{selectedStation.name}</div>
                                 <div className="text-sm leading-2 text-gray-500">Ratings & Comments</div>
@@ -733,7 +816,7 @@ export default function MapView() {
 
                             <button
                                 onClick={() => setShowReviews(false)}
-                                className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer shadow-none border-none"
+                                className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer shadow-none border-white hover:bg-white hover:shadow-sm"
                             >
                                 <X size={20} className="text-red-700" />
                             </button>
