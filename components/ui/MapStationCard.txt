@@ -1,0 +1,160 @@
+
+
+            {selectedStation && (
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/80 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-900 transition-all duration-300">
+                    <div className=" flex justify-between items-center gap-2">
+                        <h2 className="text-xl font-bold">
+                            {selectedStation.name}
+                        </h2>
+
+                        <button
+                            onClick={() => setSelectedStation(null)}
+                            className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer border-none hover:bg-white hover:shadow-sm"
+                        >
+                            <X size={20} className=" text-red-700" />
+                        </button>
+                    </div>
+
+                    <div className="text-sm text-gray-500 leading-5">
+                        {/* <span className=" font-medium text-black" >
+                            ★ {selectedStation.averageRating.toFixed(1)}
+                        </span> ({selectedStation.reviewCount}) */}
+
+                        ★ <span className="font-medium text-black">
+                            {selectedStation.reviewCount > 0
+                                ? selectedStation.averageRating.toFixed(1)
+                                : "No ratings"}
+                        </span> ({selectedStation.reviewCount})
+                    </div>
+
+                    {selectedStation.availabilityStatus === "available" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-green-700">Available</span>
+                        </div>
+                    )}
+
+                    {selectedStation.availabilityStatus === "busy" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-gray-600">Busy</span>
+                        </div>
+                    )}
+
+                    {selectedStation.availabilityStatus === "offline" && (
+                        <div className="mt-2 flex justify-start gap-1 text-xs">
+                            <span className=" font-medium text-black/50">Status</span>
+                            <span>•</span>
+                            <span className=" font-medium text-red-700">Offline</span>
+                        </div>
+                    )}
+
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
+                        <span>Connectors</span>
+                        <span>•</span>
+                        <span className="font-medium">{selectedStation.connectors.join(", ") || "unknown"}</span>
+                    </div>
+
+                    <div className="mt-2 flex justify-start gap-1 text-sm">
+                        {selectedStation.outlets > 0 && (
+                            <div className="flex justify-start gap-1 text-sm">
+                                <span>Outlets</span>
+                                <span>•</span>
+                                <span className=" font-medium">{selectedStation.outlets}</span>
+                                <span>•</span>
+                            </div>
+                        )}
+                        <span className=" font-medium">{selectedStation.powerKW} kW</span>
+                        {selectedStation.pricePerKWh > 0 && (
+                            <>
+                                <span>•</span>
+                                <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
+                            </>
+                        )}
+                    </div>
+
+
+
+                    <div className="mt-2 flex justify-center items-center gap-2">
+                        {/* Directions Button */}
+                        <button
+                            onClick={async () => {
+                                if (!userPosition) return;
+
+                                setIsRoutingLoading(true);
+
+                                const userLocation = {
+                                    lat: userPosition[0],
+                                    lng: userPosition[1],
+                                };
+
+                                const stationLocation = {
+                                    lat: selectedStation.location.coordinates[1],
+                                    lng: selectedStation.location.coordinates[0],
+                                };
+
+                                createRoute(userLocation, stationLocation);
+                                setSelectedStation(null);
+                                console.log("Creating route:", userLocation, stationLocation);
+                                console.log("Routing:", L.Routing);
+                            }}
+                            className="flex justify-center items-center gap-2 mt-4 bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full p-2 cursor-pointer w-full"
+                        >
+                            <Route size={20} />
+                            <span>Directions</span>
+                        </button>
+                        {/* Directions Button */}
+
+                        {/* Details Button */}
+                        <button
+                            onClick={() => {
+                                router.push(`/station/${selectedStation._id}/details`);
+                            }}
+                            className="
+                            flex justify-center items-center gap-2
+                            mt-3 w-1/2
+                            bg-white
+                            border border-white/20
+                            text-blue-700
+                            hover:bg-white/80
+                            transition
+                            rounded-full
+                            py-2
+                            cursor-pointer
+                            hover:shadow-sm
+                            "
+                        >
+                            {/* <SquareArrowOutUpRight size={20} /> */}
+                            <span>Details</span>
+                        </button>
+                        {/* Details Button */}
+
+                        {/* Reviews Button */}
+                        <button
+                            onClick={() => {
+                                setShowReviews(true);
+                                fetchReviews(selectedStation._id);
+                            }}
+                            className="
+                            mt-3 w-1/2
+                            bg-white
+                            border border-white/20
+                            text-blue-700
+                            hover:bg-white/80
+                            transition
+                            rounded-full
+                            py-2
+                            cursor-pointer
+                            hover:shadow-sm
+                            "
+                        >
+                            Reviews
+                        </button>
+                        {/* Reviews Button */}
+
+                    </div>
+
+                </div>
+            )}

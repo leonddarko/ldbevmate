@@ -15,12 +15,10 @@ import BottomSheet from "../ui/BottomSheet";
 import UserLocationMarker from "./UserLocationMarker";
 
 import LocationRequiredModal from "./LocationRequiredModal";
-import { LocateFixedIcon, Route, Send, SquareArrowOutUpRight, Trash2, X, } from "lucide-react";
+import { LocateFixedIcon, Plug, Route, Send, SquareArrowOutUpRight, Trash2, X, } from "lucide-react";
 import UserDropdown from "../ui/UserDropdown";
 import { useSession } from "next-auth/react";
 import BecomeOperatorModal from "../ui/BecomeOperatorModal";
-import BecomeRealtorModal from "../ui/BecomeRealtorModal";
-
 import { useRouter } from "next/navigation";
 
 
@@ -98,7 +96,6 @@ export default function MapView() {
     const [reviewLoading, setReviewLoading] = useState(false);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
-
 
 
     const { data: session } = useSession();
@@ -624,167 +621,164 @@ export default function MapView() {
 
             {/* Liquid Glass Card */}
             {selectedStation && (
-                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-md bg-white/80 border border-white/30 rounded-3xl shadow-[0_0_25px_rgba(0,200,255,0.2)] p-5 text-blue-900 transition-all duration-300">
-                    <div className=" flex justify-between items-center gap-2">
-                        <h2 className="text-xl font-bold">
-                            {selectedStation.name}
-                        </h2>
+                <div className="absolute bottom-1/6 left-1/2 -translate-x-1/2 w-[95%] max-w-md backdrop-blur-xl bg-white/85 border border-white/40 rounded-[2rem] shadow-[0_20px_50px_rgba(0,150,255,0.25)] overflow-hidden text-blue-950 transition-all duration-300 transform animate-fade-in">
 
-                        <button
-                            onClick={() => setSelectedStation(null)}
-                            className="btn btn-ghost text-lg transition px-2.5 py-2.5 rounded-full cursor-pointer border-none hover:bg-white hover:shadow-sm"
-                        >
-                            <X size={20} className=" text-red-700" />
-                        </button>
-                    </div>
-
-                    <div className="text-sm text-gray-500 leading-5">
-                        {/* <span className=" font-medium text-black" >
-                            ★ {selectedStation.averageRating.toFixed(1)}
-                        </span> ({selectedStation.reviewCount}) */}
-
-                        ★ <span className="font-medium text-black">
-                            {selectedStation.reviewCount > 0
-                                ? selectedStation.averageRating.toFixed(1)
-                                : "No ratings"}
-                        </span> ({selectedStation.reviewCount})
-                    </div>
-
-                    {selectedStation.availabilityStatus === "available" && (
-                        <div className="mt-2 flex justify-start gap-1 text-xs">
-                            <span className=" font-medium text-black/50">Status</span>
-                            <span>•</span>
-                            <span className=" font-medium text-green-700">Available</span>
-                        </div>
-                    )}
-
-                    {selectedStation.availabilityStatus === "busy" && (
-                        <div className="mt-2 flex justify-start gap-1 text-xs">
-                            <span className=" font-medium text-black/50">Status</span>
-                            <span>•</span>
-                            <span className=" font-medium text-gray-600">Busy</span>
-                        </div>
-                    )}
-
-                    {selectedStation.availabilityStatus === "offline" && (
-                        <div className="mt-2 flex justify-start gap-1 text-xs">
-                            <span className=" font-medium text-black/50">Status</span>
-                            <span>•</span>
-                            <span className=" font-medium text-red-700">Offline</span>
-                        </div>
-                    )}
-
-                    <div className="mt-2 flex justify-start gap-1 text-sm">
-                        <span>Connectors</span>
-                        <span>•</span>
-                        <span className="font-medium">{selectedStation.connectors.join(", ") || "unknown"}</span>
-                    </div>
-
-                    <div className="mt-2 flex justify-start gap-1 text-sm">
-                        {selectedStation.outlets > 0 && (
-                            <div className="flex justify-start gap-1 text-sm">
-                                <span>Outlets</span>
-                                <span>•</span>
-                                <span className=" font-medium">{selectedStation.outlets}</span>
-                                <span>•</span>
+                    {/* Top Image Banner Section */}
+                    <div className="relative w-full h-44 bg-gradient-to-b from-blue-950/20 to-blue-950/5 overflow-hidden border-b border-white/20">
+                        {selectedStation.images && selectedStation.images.length > 0 ? (
+                            <img
+                                src={selectedStation.images[0]}
+                                alt={selectedStation.name}
+                                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center text-blue-950/20 gap-1 bg-blue-50/50">
+                                <Plug size={36} strokeWidth={1.2} />
+                                <span className="text-[10px] uppercase font-black tracking-widest">No Station Preview</span>
                             </div>
                         )}
-                        <span className=" font-medium">{selectedStation.powerKW} kW</span>
-                        {selectedStation.pricePerKWh > 0 && (
-                            <>
-                                <span>•</span>
-                                <span className=" font-medium">₵{selectedStation.pricePerKWh}/kWh</span>
-                            </>
+
+                        {/* Premium Absolute Status Tag */}
+                        <div className="absolute top-4 left-4">
+                            {selectedStation.availabilityStatus === "available" && (
+                                <span className="backdrop-blur-md bg-green-500/90 border border-green-400/30 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 tracking-wide">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                                    Available
+                                </span>
+                            )}
+                            {selectedStation.availabilityStatus === "busy" && (
+                                <span className="backdrop-blur-md bg-amber-500/90 border border-amber-400/30 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 tracking-wide">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                    Busy
+                                </span>
+                            )}
+                            {selectedStation.availabilityStatus === "offline" && (
+                                <span className="backdrop-blur-md bg-red-600/90 border border-red-500/30 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 tracking-wide">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                    Offline
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Total Images Count Badge */}
+                        {selectedStation.images && selectedStation.images.length > 1 && (
+                            <div className="absolute bottom-3 right-4 backdrop-blur-md bg-black/60 border border-white/10 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">
+                                +{selectedStation.images.length - 1} More Views
+                            </div>
                         )}
+
+                        {/* Floating Close Button */}
+                        <button
+                            onClick={() => setSelectedStation(null)}
+                            className="absolute top-4 right-4 backdrop-blur-md bg-white/70 hover:bg-white text-blue-950 p-2 rounded-full cursor-pointer border border-white/40 shadow-md transition-all duration-200 group"
+                        >
+                            <X size={16} className="text-gray-800 transition-colors group-hover:text-red-600" />
+                        </button>
                     </div>
 
+                    {/* Card Details Body */}
+                    <div className="p-5">
+                        {/* Title & Ratings Line */}
+                        <div className="flex justify-between items-start gap-3">
+                            <div className="flex-grow">
+                                <h2 className="text-xl font-black tracking-tight leading-tight text-blue-950">
+                                    {selectedStation.name}
+                                </h2>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0 backdrop-blur-md bg-blue-50 border border-blue-100/60 px-2 py-0.5 rounded-lg text-xs font-bold text-blue-950 shadow-sm">
+                                <span className="text-amber-500">★</span>
+                                <span>
+                                    {selectedStation.reviewCount > 0
+                                        ? selectedStation.averageRating.toFixed(1)
+                                        : "0.0"}
+                                </span>
+                                <span className="text-gray-400 font-medium">({selectedStation.reviewCount})</span>
+                            </div>
+                        </div>
 
+                        {/* Premium Mini Spec Boxes */}
+                        <div className="grid grid-cols-3 gap-2 mt-4 border-t border-b border-blue-950/5 py-3">
+                            <div className="bg-blue-50/30 border border-blue-100/50 rounded-xl p-2 text-center">
+                                <p className="text-[9px] uppercase font-bold text-gray-400 tracking-wider">Power Output</p>
+                                <p className="text-sm font-black text-blue-950 mt-0.5">{selectedStation.powerKW} kW</p>
+                            </div>
+                            <div className="bg-blue-50/30 border border-blue-100/50 rounded-xl p-2 text-center">
+                                <p className="text-[9px] uppercase font-bold text-gray-400 tracking-wider">Outlets</p>
+                                <p className="text-sm font-black text-blue-950 mt-0.5">{selectedStation.outlets || 0} Plugs</p>
+                            </div>
+                            <div className="bg-blue-50/30 border border-blue-100/50 rounded-xl p-2 text-center">
+                                <p className="text-[9px] uppercase font-bold text-gray-400 tracking-wider">Pricing</p>
+                                <p className="text-sm font-black text-blue-950 mt-0.5">
+                                    {selectedStation.pricePerKWh > 0 ? `₵${selectedStation.pricePerKWh}` : "Free"}
+                                </p>
+                            </div>
+                        </div>
 
-                    <div className="mt-2 flex justify-center items-center gap-2">
-                        {/* Directions Button */}
-                        <button
-                            onClick={async () => {
-                                if (!userPosition) return;
+                        {/* Connectors Row */}
+                        <div className="mt-3.5 flex items-start gap-2 text-xs">
+                            <span className="font-extrabold text-blue-950/50 shrink-0 uppercase tracking-wide">Connectors:</span>
+                            <span className="font-semibold text-blue-950/80 line-clamp-2">
+                                {selectedStation.connectors && selectedStation.connectors.length > 0
+                                    ? selectedStation.connectors.join(", ")
+                                    : "Unknown"}
+                            </span>
+                        </div>
 
-                                setIsRoutingLoading(true);
+                        {/* Action Buttons Section */}
+                        <div className="mt-5 space-y-2.5">
+                            {/* Directions Button (Primary Call to Action) */}
+                            <button
+                                onClick={async () => {
+                                    if (!userPosition) return;
+                                    setIsRoutingLoading(true);
 
-                                const userLocation = {
-                                    lat: userPosition[0],
-                                    lng: userPosition[1],
-                                };
+                                    const userLocation = {
+                                        lat: userPosition[0],
+                                        lng: userPosition[1],
+                                    };
 
-                                const stationLocation = {
-                                    lat: selectedStation.location.coordinates[1],
-                                    lng: selectedStation.location.coordinates[0],
-                                };
+                                    const stationLocation = {
+                                        lat: selectedStation.location.coordinates[1],
+                                        lng: selectedStation.location.coordinates[0],
+                                    };
 
-                                createRoute(userLocation, stationLocation);
-                                setSelectedStation(null);
-                                console.log("Creating route:", userLocation, stationLocation);
-                                console.log("Routing:", L.Routing);
-                            }}
-                            className="flex justify-center items-center gap-2 mt-4 bg-blue-600 text-white hover:bg-blue-600/90 transition rounded-full p-2 cursor-pointer w-full"
-                        >
-                            <Route size={20} />
-                            <span>Directions</span>
-                        </button>
-                        {/* Directions Button */}
+                                    createRoute(userLocation, stationLocation);
+                                    setSelectedStation(null);
+                                }}
+                                className="flex justify-center items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.99] transition-all font-bold tracking-wide rounded-2xl py-3 cursor-pointer w-full shadow-md shadow-blue-500/20 text-sm"
+                            >
+                                <Route size={18} />
+                                <span>Get Directions</span>
+                            </button>
 
-                        {/* Details Button */}
-                        <button
-                            onClick={() => {
-                                router.push(`/station/${selectedStation._id}/details`);
-                            }}
-                            className="
-                            flex justify-center items-center gap-2
-                            mt-3 w-1/2
-                            bg-white
-                            border border-white/20
-                            text-blue-700
-                            hover:bg-white/80
-                            transition
-                            rounded-full
-                            py-2
-                            cursor-pointer
-                            hover:shadow-sm
-                            "
-                        >
-                            {/* <SquareArrowOutUpRight size={20} /> */}
-                            <span>Details</span>
-                        </button>
-                        {/* Details Button */}
+                            {/* Secondary Button Row: Details & Reviews */}
+                            <div className="flex gap-2.5">
+                                <button
+                                    onClick={() => {
+                                        router.push(`/station/${selectedStation._id}/details`);
+                                    }}
+                                    className="flex justify-center items-center gap-2 w-1/2 bg-white hover:bg-gray-50 text-blue-900 border border-gray-200 font-bold text-xs rounded-xl py-2.5 transition active:scale-[0.98] cursor-pointer shadow-sm"
+                                >
+                                    <span>View Details</span>
+                                </button>
 
-                        {/* Reviews Button */}
-                        <button
-                            onClick={() => {
-                                setShowReviews(true);
-                                fetchReviews(selectedStation._id);
-                            }}
-                            className="
-                            mt-3 w-1/2
-                            bg-white
-                            border border-white/20
-                            text-blue-700
-                            hover:bg-white/80
-                            transition
-                            rounded-full
-                            py-2
-                            cursor-pointer
-                            hover:shadow-sm
-                            "
-                        >
-                            Reviews
-                        </button>
-                        {/* Reviews Button */}
+                                <button
+                                    onClick={() => {
+                                        setShowReviews(true);
+                                        fetchReviews(selectedStation._id);
+                                    }}
+                                    className="flex justify-center items-center gap-2 w-1/2 bg-white hover:bg-gray-50 text-blue-900 border border-gray-200 font-bold text-xs rounded-xl py-2.5 transition active:scale-[0.98] cursor-pointer shadow-sm"
+                                >
+                                    <span>Read Reviews</span>
+                                </button>
+                            </div>
+                        </div>
 
                     </div>
-
                 </div>
             )}
 
-
             {/* Reviews Bottom Sheet Component */}
-
             {showReviews && (
                 <div className="
                     fixed inset-0 z-99999
@@ -920,9 +914,7 @@ export default function MapView() {
                     </div>
                 </div>
             )}
-
             {/* Reviews Bottom Sheet Component */}
-
 
             {isRoutingLoading && (
                 <button
@@ -943,7 +935,6 @@ export default function MapView() {
                     <span className="hidden md:inline-block">Calculating Route...</span>
                 </button>
             )}
-
 
             {!isRoutingLoading && isRouting && (
                 <button
@@ -1015,19 +1006,12 @@ export default function MapView() {
                 </div>
             )}
 
-            {/* Bottom Sheet */}
-            {/* <BottomSheet
-                station={selectedStation}
-                onClose={() => setSelectedStation(null)}
-            /> */}
-
             {/* Request Location Modal */}
             <LocationRequiredModal
                 open={!!locationError}
                 message={locationError?.message}
                 onRetry={() => window.location.reload()}
             />
-
         </div>
 
     );

@@ -8,6 +8,7 @@ import CPO from "@/models/CPO";
 const VALID_CONNECTORS = ["Type2", "CCS", "CHAdeMO", "GB/T", "Tesla"];
 const VALID_STATUS = ["available", "busy", "offline"];
 
+
 export async function POST(req) {
   try {
     await connectDB();
@@ -34,12 +35,10 @@ export async function POST(req) {
       pricePerKWh,
       outlets,
       availabilityStatus,
+      images, // <-- Destructure the images array from the frontend payload
     } = body;
 
-    // console.log(body);
-    
-
-    // // Basic validation
+    // Basic validation
     if (!name || !address || !location || !powerKW) {
       return NextResponse.json(
         { message: "Missing required fields" },
@@ -77,6 +76,14 @@ export async function POST(req) {
       );
     }
 
+    // Validate images field structure if it exists
+    if (images && (!Array.isArray(images) || images.some((url) => typeof url !== "string"))) {
+      return NextResponse.json(
+        { message: "Images must be an array of strings" },
+        { status: 400 }
+      );
+    }
+
     // 🔐 SECURITY: Ensure user owns this CPO
     const cpoDoc = await CPO.findById(cpo);
 
@@ -94,6 +101,7 @@ export async function POST(req) {
       );
     }
 
+    // Save the new station document to MongoDB including the images array
     const station = await Station.create({
       cpo,
       name,
@@ -105,10 +113,10 @@ export async function POST(req) {
       pricePerKWh,
       outlets,
       availabilityStatus,
+      images: images || [], // <-- Pass it down to your mongoose model
     });
 
     return NextResponse.json(
-      // { message: "Station created" },
       { message: "Station created", station },
       { status: 201 }
     );
@@ -120,6 +128,121 @@ export async function POST(req) {
     );
   }
 }
+
+
+// Version 1 POST Handler
+// export async function POST(req) {
+//   try {
+//     await connectDB();
+
+//     const session = await getServerSession(authOptions);
+
+//     if (!session) {
+//       return NextResponse.json(
+//         { message: "Unauthorized" },
+//         { status: 401 }
+//       );
+//     }
+
+//     const body = await req.json();
+
+//     const {
+//       cpo,
+//       name,
+//       description,
+//       address,
+//       location,
+//       connectors,
+//       powerKW,
+//       pricePerKWh,
+//       outlets,
+//       availabilityStatus,
+//     } = body;
+
+//     // console.log(body);
+    
+
+//     // // Basic validation
+//     if (!name || !address || !location || !powerKW) {
+//       return NextResponse.json(
+//         { message: "Missing required fields" },
+//         { status: 400 }
+//       );
+//     }
+
+//     if (
+//       location.type !== "Point" ||
+//       !Array.isArray(location.coordinates) ||
+//       location.coordinates.length !== 2
+//     ) {
+//       return NextResponse.json(
+//         { message: "Invalid location format" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // Validate connectors
+//     if (connectors?.some((c) => !VALID_CONNECTORS.includes(c))) {
+//       return NextResponse.json(
+//         { message: "Invalid connector type" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // Validate availability
+//     if (
+//       availabilityStatus &&
+//       !VALID_STATUS.includes(availabilityStatus)
+//     ) {
+//       return NextResponse.json(
+//         { message: "Invalid availability status" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // 🔐 SECURITY: Ensure user owns this CPO
+//     const cpoDoc = await CPO.findById(cpo);
+
+//     if (!cpoDoc) {
+//       return NextResponse.json(
+//         { message: "CPO not found" },
+//         { status: 404 }
+//       );
+//     }
+
+//     if (cpoDoc.user.toString() !== session.user.id) {
+//       return NextResponse.json(
+//         { message: "Forbidden" },
+//         { status: 403 }
+//       );
+//     }
+
+//     const station = await Station.create({
+//       cpo,
+//       name,
+//       description,
+//       address,
+//       location,
+//       connectors,
+//       powerKW,
+//       pricePerKWh,
+//       outlets,
+//       availabilityStatus,
+//     });
+
+//     return NextResponse.json(
+//       // { message: "Station created" },
+//       { message: "Station created", station },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json(
+//       { message: "Server error" },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 
 export async function GET() {

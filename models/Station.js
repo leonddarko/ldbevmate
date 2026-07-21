@@ -63,7 +63,7 @@ const stationSchema = new mongoose.Schema(
 
     images: [
       {
-        type: String, // S3 URLs
+        type: String,
       },
     ],
 

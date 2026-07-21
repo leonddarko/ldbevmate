@@ -1,120 +1,139 @@
 "use client"
 
-import { Delete, MapPin, Pencil, Trash } from "lucide-react";
+import { MapPin, Pencil, Trash, Plug } from "lucide-react";
+import Image from "next/image"; // Alternatively, use standard <img> if not using Next.js Image optimization
 
 export default function CPOStationCard({ Stations }) {
-    return (<>
-        {Stations.length === 0 ? (
-            <div className="backdrop-blur-2xl bg-blue-100/40 border border-blue-100/50 rounded-3xl p-6">
-                <p className="text-xs">No stations yet.</p>
-            </div>
-        ) : (
-            <div className="grid gap-4">
+    return (
+        <>
+            {Stations.length === 0 ? (
+                <div className="backdrop-blur-2xl bg-blue-100/40 border border-blue-100/50 rounded-3xl p-6 text-center">
+                    <p className="text-sm font-medium text-blue-950/60">No stations yet.</p>
+                </div>
+            ) : (
+                <div className="grid gap-6">
+                    {Stations.map((station) => {
+                        // Check if station has any images, pick the first one as the premium thumbnail
+                        const hasImages = station.images && station.images.length > 0;
+                        const mainImage = hasImages ? station.images[0] : null;
 
-                {Stations.map((station) => (
-                    <div
-                        key={station._id}
-                        className="
-                        backdrop-blur-2xl
-                        bg-white/80
-                        border border-white/40
-                        rounded-2xl
-                        p-5
-                        shadow-sm
-                        flex justify-between items-center gap-5
-    "
-                    >
-                        {/* Station Info */}
-                        <div>
-                            <h2 className="text-lg font-bold text-blue-950">
-                                {station.name}
-                            </h2>
+                        return (
+                            <div
+                                key={station._id}
+                                className="
+                                    backdrop-blur-2xl
+                                    bg-white/90
+                                    border border-white/50
+                                    rounded-3xl
+                                    p-4
+                                    sm:p-5
+                                    shadow-md hover:shadow-lg
+                                    transition-all duration-300
+                                    flex flex-col sm:flex-row items-stretch gap-6
+                                "
+                            >
+                                {/* Left Side Image Container */}
+                                <div className="relative w-full sm:w-44 h-40 sm:h-auto rounded-2xl overflow-hidden bg-blue-950/5 flex-shrink-0 border border-black/5 shadow-inner">
+                                    {mainImage ? (
+                                        <img
+                                            src={mainImage}
+                                            alt={station.name}
+                                            className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex flex-col items-center justify-center text-blue-950/30 gap-1">
+                                            <Plug size={32} strokeWidth={1.5} />
+                                            <span className="text-[10px] uppercase tracking-wider font-semibold">No Preview</span>
+                                        </div>
+                                    )}
 
-                            <p className="text-sm text-blue-950/80">
-                                {station.address}
-                            </p>
-
-                            <p className="text-xs mt-1 text-gray-500">
-                                <span className=" font-bold">{station.powerKW} kW </span>
-                                •
-                                <span> {station.connectors.join(", ")}</span>
-                            </p>
-
-                            <p className="text-xs mt-1 text-gray-500">
-                                <span>Outlets </span>
-                                •
-                                <span className=" font-bold"> {station.outlets}</span>
-                            </p>
-
-                            {station.availabilityStatus === "available" && (
-                                <div className="text-xs mt-1">
-                                    <span className="text-gray-500">
-                                        Status :
-                                    </span>
-                                    &nbsp;
-                                    <span className="text-green-800 font-bold">
-                                        {station.availabilityStatus}
-                                    </span>
+                                    {/* Premium Total Count Badge */}
+                                    {station.images && station.images.length > 1 && (
+                                        <div className="absolute bottom-2 right-2 backdrop-blur-md bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                            +{station.images.length - 1} More
+                                        </div>
+                                    )}
                                 </div>
-                            )}
 
-                            {/* <div className="text-xs text-gray-500">
-                                ⭐ {station.averageRating} ({station.reviewCount})
-                            </div> */}
-                        </div>
+                                {/* Right Side: Info & Actions Group */}
+                                <div className="flex flex-col justify-between flex-grow gap-4">
+                                    {/* Station Header & Badges */}
+                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-2">
+                                        <div>
+                                            <h2 className="text-xl font-black tracking-tight text-blue-950">
+                                                {station.name}
+                                            </h2>
+                                            <p className="text-sm text-blue-950/70 flex items-center gap-1 mt-0.5">
+                                                <MapPin size={14} className="text-blue-600 flex-shrink-0" />
+                                                <span>{station.address}</span>
+                                            </p>
+                                        </div>
 
-                        {/* Actions */}
-                        <div className="flex flex-col md:flex-row gap-2">
+                                        {/* Status Tag */}
+                                        <div>
+                                            {station.availabilityStatus === "available" ? (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 shadow-sm border border-green-200 capitalize">
+                                                    ● {station.availabilityStatus}
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 shadow-sm border border-amber-200 capitalize">
+                                                    ● {station.availabilityStatus || 'Offline'}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
 
-                            {/* <a
-                                href={`/?station=${station._id}`}
-                                className="btn btn-xs backdrop-blur-xl bg-blue-500/10 border border-blue-100/20 shadow-sm text-blue-950 rounded-full
-                                flex justify-between
-                                "
-                            >
-                                <MapPin size={15} />
-                                <span>
-                                    View Map
-                                </span>
-                            </a> */}
+                                    {/* Tech Details Section */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 border-t border-blue-950/5 pt-3">
+                                        <div className="bg-blue-50/40 border border-blue-100/50 rounded-xl p-2">
+                                            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Power Output</p>
+                                            <p className="text-sm font-black text-blue-950">{station.powerKW} kW</p>
+                                        </div>
+                                        <div className="bg-blue-50/40 border border-blue-100/50 rounded-xl p-2 col-span-1">
+                                            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Outlets Available</p>
+                                            <p className="text-sm font-black text-blue-950">{station.outlets || 0} Plugs</p>
+                                        </div>
+                                        <div className="bg-blue-50/40 border border-blue-100/50 rounded-xl p-2 col-span-2 md:col-span-1">
+                                            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Connectors</p>
+                                            <p className="text-xs font-bold text-blue-950/80 truncate">
+                                                {station.connectors?.join(", ") || "None"}
+                                            </p>
+                                        </div>
+                                    </div>
 
-                            <a
-                                href={`/cpo/stations/${station._id}/edit`}
-                                className="btn btn-xs bg-blue-900 text-white border-none rounded-full
-                                shadow flex justify-between
-                                "
-                            >
-                                <Pencil size={13} />
-                                <span>
-                                    Edit
-                                </span>
-                            </a>
+                                    {/* Actions Buttons Container */}
+                                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-blue-950/5 sm:border-t-0 sm:pt-0">
+                                        <a
+                                            href={`/cpo/stations/${station._id}/edit`}
+                                            className="btn btn-xs sm:btn-sm bg-blue-950 hover:bg-blue-900 text-white border-none rounded-xl shadow-sm px-4 flex items-center gap-1.5 normal-case font-bold tracking-wide transition-colors duration-200"
+                                        >
+                                            <Pencil size={13} />
+                                            <span>Edit</span>
+                                        </a>
 
+                                        <button
+                                            className="btn btn-xs sm:btn-sm bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-xl shadow-sm px-4 flex items-center gap-1.5 normal-case font-bold transition-colors duration-200"
+                                            onClick={async () => {
+                                                if (!confirm("Delete this station?")) return;
 
-                            <button
-                                className="btn btn-xs bg-red-700 text-white border-none rounded-full shadow flex justify-between"
-                                onClick={async () => {
-                                    if (!confirm("Delete this station?")) return;
+                                                await fetch(`/api/stations/${station._id}`, {
+                                                    method: "DELETE",
+                                                    // Make sure to clean up storage images here if desired on the backend
+                                                });
 
-                                    await fetch(`/api/stations/${station._id}`, {
-                                        method: "DELETE",
-                                    });
-
-                                    window.location.reload();
-                                }}
-                            >
-                                <Trash size={13} />
-                                <span>
-                                    Del
-                                </span>
-                            </button>
-
-                        </div>
-
-                    </div>
-                ))}
-
-            </div>
-        )}
-    </>)
+                                                window.location.reload();
+                                            }}
+                                        >
+                                            <Trash size={13} />
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </>
+    );
 }
